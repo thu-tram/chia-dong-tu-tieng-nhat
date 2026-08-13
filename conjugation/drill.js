@@ -2,6 +2,26 @@
 
 import rules from './rules.js';
 
+const qs = (sel, ctx) => (ctx || document).querySelector(sel);
+const qsa = (sel, ctx) => Array.from((ctx || document).querySelectorAll(sel));
+const elById = (id) => document.getElementById(id);
+
+function setHtml(el, html) {
+  if (el) el.innerHTML = html;
+}
+
+function setText(el, text) {
+  if (el) el.textContent = text;
+}
+
+function show(el) {
+  if (el) el.style.display = 'block';
+}
+
+function hide(el) {
+  if (el) el.style.display = 'none';
+}
+
 const tagTranslations = {
   "plain": "thường",
   "polite": "lịch sự",
@@ -62,6 +82,12 @@ function translateTags(tags) {
   return tags.filter(function (t) { return t !== ""; }).map(translateTag);
 }
 
+function tagSpans(tags) {
+  return tags.filter(function (t) { return t !== ""; }).map(function (tag) {
+    return "<span class='tag' data-tag='" + tag + "'>" + translateTag(tag) + "</span>";
+  }).join(" ");
+}
+
 function confirmAndStopQuiz() {
   if (confirm("Bạn có chắc chắn muốn dừng làm bài và quay lại trang chủ không?")) {
     showSplash();
@@ -69,18 +95,22 @@ function confirmAndStopQuiz() {
 }
 
 function getGroupCheckboxes(group) {
+  var ids = [];
   switch (group) {
     case 'conjugations':
-      return $('#plain, #polite, #negative, #past, #te-form, #progressive, #desire, #volitional, #potential, #conditional, #provisional, #imperative, #passive, #causative');
+      ids = ['plain', 'polite', 'negative', 'past', 'te-form', 'progressive', 'desire', 'volitional', 'potential', 'conditional', 'provisional', 'imperative', 'passive', 'causative'];
+      break;
     case 'verbs':
-      return $('#godan, #ichidan, #suru, #kuru, #iku, #aru, #iru');
+      ids = ['godan', 'ichidan', 'suru', 'kuru', 'iku', 'aru', 'iru'];
+      break;
     case 'adjectives':
-      return $('#i-adjective, #na-adjective, #ii');
+      ids = ['i-adjective', 'na-adjective', 'ii'];
+      break;
     case 'filters':
-      return $('#common, #n5, #n4, #n3, #n2, #n1');
-    default:
-      return $();
+      ids = ['common', 'n5', 'n4', 'n3', 'n2', 'n1'];
+      break;
   }
+  return ids.map(elById).filter(Boolean);
 }
 
 var words;
@@ -96,7 +126,7 @@ const configOptions = {
     "potential", "conditional", "provisional", "imperative", "passive", "causative", "godan", "ichidan",
     "iku", "kuru", "suru", "aru", "iru", "i-adjective", "na-adjective", "ii", "desire",
     "volitional", "trick", "kana", "furigana_always", "go_to_next_question",
-    "auto_show_explanation", "use_voice","common","n5","n4","n3","n2","n1"],
+    "auto_show_explanation", "use_voice", "common", "n5", "n4", "n3", "n2", "n1"],
 
   selects: ["questionFocus"],
 
@@ -150,45 +180,23 @@ Array.prototype.randomElement = function () {
   return this[Math.floor(Math.random() * this.length)]
 }
 
-// From: http://stackoverflow.com/a/2897510
-new function ($) {
-  $.fn.getCursorPosition = function () {
-    var input = this.get(0);
-    if (!input) return; // No (input) element found
-    if ('selectionStart' in input) {
-      // Standard-compliant browsers
-      return input.selectionStart;
-    } else if (document.selection) {
-      // IE
-      input.fmcus();
-      var sel = document.selection.createRange();
-      var selLen = document.selection.createRange().text.length;
-      sel.moveStart('character', -input.value.length);
-      return sel.text.length - selLen;
-    }
+function getCursorPosition(input) {
+  if (!input) return 0;
+  if ('selectionStart' in input) {
+    return input.selectionStart;
   }
-}(jQuery);
+  return input.value ? input.value.length : 0;
+}
 
-// From: http://stackoverflow.com/questions/499126/jquery-set-cursor-position-in-text-area
-
-new function ($) {
-  $.fn.setCursorPosition = function (pos) {
-    if (this.setSelectionRange) {
-      this.setSelectionRange(pos, pos);
-    } else if (this.createTextRange) {
-      var range = this.createTextRange();
-      range.collapse(true);
-      if (pos < 0) {
-        pos = $(this).val().length + pos;
-      }
-      range.moveEnd('character', pos);
-      range.moveStart('character', pos);
-      range.select();
-    }
+function setCursorPosition(input, pos) {
+  if (!input) return;
+  if (input.setSelectionRange) {
+    input.focus();
+    input.setSelectionRange(pos, pos);
   }
-}(jQuery);
+}
 
-// Waaaayy overkill here but these ranges were taken from http://www.unicode.org/charts/ and I kinda got carried away.
+// Ranges taken from http://www.unicode.org/charts/
 
 var japaneseTextPattern = /^[\u{3040}-\u{309f}\u{30a0}-\u{30ff}\u{3190}-\u{319f}\u{31f0}-\u{31ff}\u{3400}-\u{4dbf}\u{4e00}-\u{9ffc}\u{f900}-\u{faff}\u{ff00}-\u{ffef}\u{1b000}-\u{1b0ff}\u{1b100}-\u{1b12f}\u{1b130}-\u{1b16f}\u{20000}-\u{2a6dd}\u{2a700}-\u{2b734}\u{2b740}-\u{2b81d}\u{2b820}-\u{2cea1}\u{2ceb0}-\u{2ebe0}\u{2f800}-\u{2fa1f}\u{30000}-\u{3134a}]*$/u;
 
@@ -284,10 +292,10 @@ function wordWithFurigana(words) {
 
 function processAnswerKey() {
 
-  var el = $('#answer');
+  var el = elById('answer');
 
-  var pos = el.getCursorPosition();
-  var val = el.val();
+  var pos = getCursorPosition(el);
+  var val = el.value;
 
   var last1 = val.slice(pos - 1, pos);
   var last2 = val.slice(pos - 2, pos);
@@ -361,16 +369,16 @@ function processAnswerKey() {
 
   if (replace3[last3]) {
     val = val.slice(0, pos - 3) + replace3[last3] + val.slice(pos, -1);
-    el.val(val);
-    el.setCursorPosition(pos - 3 + replace3[last3].length);
+    el.value = val;
+    setCursorPosition(el, pos - 3 + replace3[last3].length);
   } else if (replace2[last2]) {
     val = val.slice(0, pos - 2) + replace2[last2] + val.slice(pos, -1);
-    el.val(val);
-    el.setCursorPosition(pos - 2 + replace2[last2].length);
+    el.value = val;
+    setCursorPosition(el, pos - 2 + replace2[last2].length);
   } else if (replace1[last1]) {
     val = val.slice(0, pos - 1) + replace1[last1] + val.slice(pos, -1);
-    el.val(val);
-    el.setCursorPosition(pos - 1 + replace1[last1].length);
+    el.value = val;
+    setCursorPosition(el, pos - 1 + replace1[last1].length);
   }
 }
 
@@ -415,12 +423,10 @@ function validQuestion(entry, forms, transformation, options) {
       }
     }
   }
-  
+
   if (!pass) {
     valid = false;
   }
-
-
 
   if (!forms["furigana"][transformation.from])
     valid = false;
@@ -433,7 +439,6 @@ function validQuestion(entry, forms, transformation, options) {
     if (options.questionFocus != "none") {
 
       if (options.questionFocus == 'tetakei') {
-        // console.log("tetakei", words[entry].conjugations[transformation.from].tetakei, words[entry].conjugations[transformation.to].tetakei)
         if (words[entry].conjugations[transformation.from].tetakei == words[entry].conjugations[transformation.to].tetakei) {
           valid = false;
         }
@@ -456,7 +461,7 @@ function generateQuestion() {
     "plain": "<span class='first'>chuyển</span> từ sau sang <span class='emphasis'>thể thường (thể ngắn)</span>",
     "polite": "<span class='first'>chuyển</span> từ sau sang <span class='emphasis'>thể lịch sự (thể ます)</span>",
     "て": "<span class='emphasis first'>chuyển</span> từ sau sang <span class='emphasis'>thể て</span>",
-"non-て": "<span class='emphasis first'>bỏ</span> <span class='emphasis'>thể て</span> ở từ sau",
+    "non-て": "<span class='emphasis first'>bỏ</span> <span class='emphasis'>thể て</span> ở từ sau",
     "potential": "<span class='first'>chuyển</span> từ sau sang <span class='emphasis'>thể khả năng</span>",
     "non-potential": "<span class='first'>bỏ</span> <span class='emphasis'>thể khả năng</span> ở từ sau (đưa về thể thường)",
     "conditional": "<span class='first'>chuyển</span> từ sau sang <span class='emphasis'>thể điều kiện (たら)</span>",
@@ -484,7 +489,7 @@ function generateQuestion() {
   var options = getOptions();
   var word_selection = question_pool.slice();
   var count = 0;
-  
+
   while (true) {
 
     if (count++ == 800) {
@@ -497,7 +502,7 @@ function generateQuestion() {
       word_selection = question_pool.slice();
       entry = word_selection.randomElement();
     }
-    
+
     var transformation = transformations.randomElement();
 
     from_form = transformation.from;
@@ -511,13 +516,6 @@ function generateQuestion() {
       var index = word_selection.indexOf(entry);
       word_selection.splice(index, 1);
     }
-
-    // Modify the chance of trick questions so that they appear on average 25%
-    // of the time. When trick questions are active then 50% of the
-    // transformation structure are trick questions and so a 33% filter here
-    // will achieve the 25% because this test is only performed when a trick
-    // question has been selected.
-    // Landon - Trick questions always felt too common, so I'm cutting the chances by a tenth.
 
     if (transformation.tags.indexOf('trick') != -1) {
       if (Math.random() > 0.033) {
@@ -534,7 +532,6 @@ function generateQuestion() {
   var kanaForms = forms["hiragana"];
   var furiganaForms = forms["furigana"];
 
-
   var candidates;
 
   if (options["kana"]) {
@@ -550,8 +547,6 @@ function generateQuestion() {
 
   var thisQuestionText = questionText[transformation.phrase];
 
-  // thisQuestionText = thisQuestionText[0].toUpperCase() + thisQuestionText.substring(1);
-
   var questionFirstHalf = thisQuestionText;
   var questionSecondHalf = givenWord;
   var question = questionFirstHalf.replace("từ sau", "từ " + questionSecondHalf).replace("từ sau", "từ " + questionSecondHalf);
@@ -565,12 +560,12 @@ function generateQuestion() {
     answerWithFurigana = kanaForms[to_form];
   }
 
-  $('#questionFirstHalf').html(questionFirstHalf);
+  setHtml(elById('questionFirstHalf'), questionFirstHalf);
 
   if (options.use_voice) {
-    $('#questionSecondHalf').html("<div id='speechSpace'><i>Nhấn phím Space để nghe từ</i><br><div class='halfSpeed'>Nhấn giữ Shift để nghe với tốc độ chậm hơn</div></div>");
+    setHtml(elById('questionSecondHalf'), "<div id='speechSpace'><i>Nhấn phím Space để nghe từ</i><br><div class='halfSpeed'>Nhấn giữ Shift để nghe với tốc độ chậm hơn</div></div>");
   } else {
-    $('#questionSecondHalf').html(questionSecondHalf);
+    setHtml(elById('questionSecondHalf'), questionSecondHalf);
   }
 
   window.questionData = {
@@ -583,8 +578,6 @@ function generateQuestion() {
     givenWord: givenWord,
     givenWordAsKanji: givenWordAsKanji,
   };
-
-  // Construct the explanation page.
 
   var data = window.questionData;
 
@@ -608,7 +601,7 @@ function generateQuestion() {
   var notes = words[data.entry].notes[0];
   var audio = words[data.entry].audio;
 
-  var anchor = document.getElementById('jisho-link');
+  var anchor = elById('jisho-link');
   anchor.setAttribute('href', 'https://mazii.net/vi-VN/search/word/javi/' + sentenceJP);
 
   if (words[data.entry].group == "na-adjective") {
@@ -622,68 +615,64 @@ function generateQuestion() {
   } else {
     dictionary = kanaForm(dictionary);
   }
-  $('#explain-audio').html(audio);
-  $('#explain-given-base').html(dictionary);
-  $('#explain-notes').html(notes);
-  $('#explain-meaning').html(meaning);
-  $('#explain-sentence-jp').html(sentenceJP);
-  $('#explain-sentence-en').html(sentenceEN);
-  $('#explain-given').html(givenWord);
-  $('#explain-given-tags').html(translateTags(data.transformation.from_tags).map(function (tag) { return "<span class='tag'>" + tag + "</span>"; }).join(" "));
-  $('.explain-given-dictionary').html(dictionary);
-  $('#explain-group').html(groupLabels[words[data.entry].group]);
-  $('.explain-transform').html(phraseTranslations[data.transformation.phrase] || data.transformation.phrase);
-  $('.explain-answer-tags').html(translateTags(data.transformation.to_tags).map(function (tag) { return "<span class='tag'>" + tag + "</span>"; }).join(" "));
-  $('.explain-answer-tags2').html(translateTags(data.transformation.to_tags).join(" "));
-  $('.explain-answer').html(commaList(questionData.answerWithFurigana, "hoặc"));
 
-  $('.explain-answer-as-list').empty();
+  setHtml(elById('explain-audio'), audio);
+  setHtml(elById('explain-given-base'), dictionary);
+  setHtml(elById('explain-notes'), notes);
+  setHtml(elById('explain-meaning'), meaning);
+  setHtml(elById('explain-sentence-jp'), sentenceJP);
+  setHtml(elById('explain-sentence-en'), sentenceEN);
+  setHtml(elById('explain-given'), givenWord);
+  setHtml(elById('explain-given-tags'), tagSpans(data.transformation.from_tags));
+  qsa('.explain-given-dictionary').forEach(function (el) { el.innerHTML = dictionary; });
+  setText(elById('explain-group'), groupLabels[words[data.entry].group]);
+  qsa('.explain-transform').forEach(function (el) { el.innerHTML = phraseTranslations[data.transformation.phrase] || data.transformation.phrase; });
+  qsa('.explain-answer-tags').forEach(function (el) { el.innerHTML = tagSpans(data.transformation.to_tags); });
+  qsa('.explain-answer-tags2').forEach(function (el) { el.innerHTML = tagSpans(data.transformation.to_tags); });
+  qsa('.explain-answer').forEach(function (el) { el.innerHTML = commaList(data.answerWithFurigana, "hoặc"); });
 
-  questionData.answerWithFurigana.forEach(function (answer) {
-    $('.explain-answer-as-list').append("<li>" + answer);
+  qsa('.explain-answer-as-list').forEach(function (el) {
+    el.innerHTML = data.answerWithFurigana.map(function (answer) {
+      return "<li>" + answer + "</li>";
+    }).join("");
   });
 
-  if (window.questionData.transformation.tags.indexOf("trick") != -1) {
-    $('.explain-trick').show();
-    $('.explain-no-trick').hide();
-  } else {
-    $('.explain-trick').hide();
-    $('.explain-no-trick').show();
-  }
+  var isTrick = window.questionData.transformation.tags.indexOf("trick") != -1;
+
+  qsa('.explain-trick').forEach(function (el) { el.style.display = isTrick ? 'block' : 'none'; });
+  qsa('.explain-no-trick').forEach(function (el) { el.style.display = isTrick ? 'none' : 'block'; });
 
   if (data.transformation.to == "dictionary") {
-    $('.explain-hide-end').hide();
+    qsa('.explain-hide-end').forEach(hide);
   } else {
-    $('.explain-hide-end').show();
+    qsa('.explain-hide-end').forEach(show);
   }
 
   if (data.answer.length == 1) {
-    $('.explain-answer-single').show();
-    $('.explain-answer-multiple').hide();
+    qsa('.explain-answer-single').forEach(show);
+    qsa('.explain-answer-multiple').forEach(hide);
   } else {
-    $('.explain-answer-single').hide();
-    $('.explain-answer-multiple').show();
+    qsa('.explain-answer-single').forEach(hide);
+    qsa('.explain-answer-multiple').forEach(show);
   }
 
-  $('#response').html("");
-  $('#message').hide();
+  setHtml(elById('response'), "");
+  hide(elById('message'));
 
-  $('#proceed').hide();
-  $('#explanation').hide();
-  $('#inputArea').show();
-  $('#answer').focus();
+  hide(elById('proceed'));
+  hide(elById('explanation'));
+  show(elById('inputArea'));
 
-  $('#answer').on('input', processAnswerKey);
-  $('#answer').on('keydown', processAnswerKeyDown);
+  var answerEl = elById('answer');
+  if (answerEl) answerEl.focus();
 }
 
 function processAnswer() {
 
   var options = getOptions();
   var questionData = window.questionData;
-  var response = $('#answer').val().trim();
-  // console.log("answer provided", response);
-  // console.log("questionData", questionData.answer);
+  var answerEl = elById('answer');
+  var response = answerEl.value.trim();
 
   var shake = false;
 
@@ -699,7 +688,6 @@ function processAnswer() {
   }
 
   var correct = ((questionData.answer.indexOf(response) != -1) || (questionData.answer2.indexOf(response) != -1));
-  // console.log("correct", correct);
 
   var klass = correct ? "correct" : "incorrect";
 
@@ -711,57 +699,73 @@ function processAnswer() {
     "correct": correct
   });
 
-  var totalQuestions = $('#numQuestions').val();
+  var totalQuestions = Number(elById('numQuestions').value);
   var answeredQuestions = log.history.length;
 
   updateProgressBar(answeredQuestions / totalQuestions * 100);
 
-  $('#answer').val("");
-  $('#responseButton').prop('class', klass).text(response);
+  answerEl.value = "";
+
+  var responseButton = elById('responseButton');
+  responseButton.className = klass;
+  responseButton.textContent = response;
 
   if (correct) {
-    $('#message').hide();
+    hide(elById('message'));
   } else {
-    $('#message').show();
-    $('#message #correction').html("Đáp án đúng là " + commaList(questionData.answerWithFurigana, "hoặc"));
+    show(elById('message'));
+    setHtml(elById('correction'), "Đáp án đúng là " + commaList(questionData.answerWithFurigana, "hoặc"));
   }
 
-  $('#inputArea').hide();
-  $('#proceed').show();
-  $('#explanation').hide();
-  $('#proceed button').focus();
+  hide(elById('inputArea'));
+  show(elById('proceed'));
+  hide(elById('explanation'));
+
+  var proceedButton = qs('#proceed button');
+  if (proceedButton) proceedButton.focus();
 
   updateHistoryView(log);
-  //reccomended by toxinu
+
   if (correct) {
     if (options.go_to_next_question) {
-      //add confirmation animation
       proceed();
     }
   } else {
     if (options.auto_show_explanation) {
-      //emulate explain button press
       explain();
     }
   }
-  window.scrollTo(0,0);
+  window.scrollTo(0, 0);
 }
 
 function shakeInputArea() {
 
-  var inputArea = $('#inputArea');
-  var shakeClass = "shake";
+  var inputArea = elById('inputArea');
+  if (!inputArea) return;
 
-  inputArea.addClass(shakeClass);
+  inputArea.classList.remove('shake');
+  void inputArea.offsetWidth;
+  inputArea.classList.add('shake');
 
-  setTimeout(function () {
-    inputArea.removeClass(shakeClass)
-  }, 10000);
+  inputArea.addEventListener('animationend', function handler() {
+    inputArea.classList.remove('shake');
+    inputArea.removeEventListener('animationend', handler);
+  });
+}
+
+function createMark(text, className) {
+  var span = document.createElement('span');
+  span.className = className;
+  span.textContent = text;
+  return span;
 }
 
 function updateHistoryView(log) {
 
-  var review = $('<div>');
+  var historyEl = elById('history');
+  if (!historyEl) return;
+
+  var review = document.createElement('div');
 
   var total = 0;
   var correct = 0;
@@ -774,41 +778,45 @@ function updateHistoryView(log) {
       correct++;
     }
 
-    var tr = $('<div class="row mt-4">');
+    var tr = document.createElement('div');
+    tr.className = 'history-row';
 
-    var td1 = $('<div class="col-md-6 mb-2">');
-    var td2 = $('<div class="col-md-6">');
+    var td1 = document.createElement('div');
+    td1.className = 'history-question';
+    var td2 = document.createElement('div');
+    td2.className = 'history-answer';
 
-    td1.html((index + 1) + ". " + entry.question + ".");
+    td1.innerHTML = (index + 1) + ". " + entry.question + ".";
 
-    var responseDiv = $('<div>');
-    responseDiv.text(entry.response);
+    var responseDiv = document.createElement('div');
+    responseDiv.textContent = entry.response;
 
     if (entry.correct) {
-      responseDiv.append("<span class='answer-correct'> 〇</span>");
+      responseDiv.appendChild(createMark(' 〇', 'answer-correct'));
     } else {
-      responseDiv.append("<span class='answer-wrong'> ×</span>");
+      responseDiv.appendChild(createMark(' ×', 'answer-wrong'));
     }
 
-    td2.append(responseDiv);
+    td2.appendChild(responseDiv);
 
     if (!entry.correct) {
 
-      var correctDiv = $('<div>');
+      var correctDiv = document.createElement('div');
 
-      correctDiv.html(commaList(entry.answer, "hoặc"));
-      correctDiv.append("<span class='answer-correct'> 〇</span>");
+      correctDiv.innerHTML = commaList(entry.answer, "hoặc");
+      correctDiv.appendChild(createMark(' 〇', 'answer-correct'));
 
-      td2.append(correctDiv);
+      td2.appendChild(correctDiv);
     }
 
-    tr.append(td1);
-    tr.append(td2);
+    tr.appendChild(td1);
+    tr.appendChild(td2);
 
-    review.append(tr);
+    review.appendChild(tr);
   });
 
-  $('#history').empty().append(review);
+  historyEl.innerHTML = "";
+  historyEl.appendChild(review);
 
   var resultString;
 
@@ -820,16 +828,17 @@ function updateHistoryView(log) {
     resultString = "Đúng " + correct + " trên tổng số " + total + " câu";
   }
 
-  $('#scoreSectionTitleNarrow').text(resultString);
-  $('#scoreSectionTitleWide').text(resultString);
+  setText(elById('scoreSectionTitleNarrow'), resultString);
+  setText(elById('scoreSectionTitleWide'), resultString);
 }
 
 function updateProgressBar(progress) {
-  $('.progressBar').attr('style', 'width: ' + progress + '%');
+  var bar = qs('.progressBar');
+  if (bar) bar.style.width = progress + '%';
 }
 
 function proceed() {
-  if (log.history.length == $('#numQuestions').val()) {
+  if (log.history.length == Number(elById('numQuestions').value)) {
     endQuiz();
   } else {
     generateQuestion();
@@ -837,11 +846,12 @@ function proceed() {
 }
 
 function showSplash() {
-  $('#splash').show();
-  $('#quizSection').hide();
-  $('#scoreSection').hide();
+  show(elById('splash'));
+  hide(elById('quizSection'));
+  hide(elById('scoreSection'));
 
-  $('#go').focus();
+  var go = elById('go');
+  if (go) go.focus();
 }
 
 export default function checkAnswer() {
@@ -853,7 +863,7 @@ function startQuiz(event) {
 
   var options = getOptions();
 
-  const voiceSelectError = document.querySelector('#voiceSelectError');
+  const voiceSelectError = elById('voiceSelectError');
 
   if (options.use_voice && !getVoiceConfig()) {
     voiceSelectError.style.display = "block";
@@ -864,14 +874,14 @@ function startQuiz(event) {
 
   updateProgressBar(0);
 
-  $('#splash').hide();
-  $('#quizSection').show();
-  $('#scoreSection').hide();
+  hide(elById('splash'));
+  show(elById('quizSection'));
+  hide(elById('scoreSection'));
 
   if (options.furigana_always) {
-    $('body').addClass("furiganaAlways");
+    document.body.classList.add("furiganaAlways");
   } else {
-    $('body').removeClass("furiganaAlways");
+    document.body.classList.remove("furiganaAlways");
   }
 
   resetLog();
@@ -879,107 +889,102 @@ function startQuiz(event) {
 }
 
 function endQuiz() {
-  $('#splash').hide();
-  $('#quizSection').hide();
-  $('#scoreSection').show();
+  hide(elById('splash'));
+  hide(elById('quizSection'));
+  show(elById('scoreSection'));
 
-  $('#backToStart').focus();
+  var backToStart = elById('backToStart');
+  if (backToStart) backToStart.focus();
 }
 
 // Text to Speech
 
 function loadVoiceList(callback) {
-	if (window.speechSynthesis.getVoices().length == 0) {
-		window.speechSynthesis.addEventListener('voiceschanged', function () {
+  if (window.speechSynthesis.getVoices().length == 0) {
+    window.speechSynthesis.addEventListener('voiceschanged', function () {
       if (callback) {
-  			callback();
+        callback();
       }
-		});
-	} else {
+    });
+  } else {
     if (callback) {
-		  callback();
+      callback();
     }
-	}
+  }
 }
 
 function populateVoiceList() {
 
-	loadVoiceList(function () {
+  loadVoiceList(function () {
 
-	  var voiceSelect = document.querySelector("#voice_select");
+    var voiceSelect = elById('voice_select');
 
-	  voiceSelect.innerHTML = "<option>Chọn giọng đọc...</option>" +
-        window.speechSynthesis.getVoices().map(function (voice) { return "<option>" + voice.name + "</option>" }).join("");
+    voiceSelect.innerHTML = "<option>Chọn giọng đọc...</option>" +
+      window.speechSynthesis.getVoices().map(function (voice) { return "<option>" + voice.name + "</option>" }).join("");
 
-	  var currentVoice = getCurrentVoice();
+    var currentVoice = getCurrentVoice();
 
-	  if (currentVoice) {
-	  	voiceSelect.value = currentVoice;
-	  }
-	});
+    if (currentVoice) {
+      voiceSelect.value = currentVoice;
+    }
+  });
 }
 
 function getVoiceConfig() {
-	return JSON.parse(localStorage.getItem("voiceConfig"));
+  return JSON.parse(localStorage.getItem("voiceConfig"));
 }
 
 function setVoiceConfig(config) {
-	localStorage.setItem("voiceConfig", JSON.stringify(config));
+  localStorage.setItem("voiceConfig", JSON.stringify(config));
 }
 
 function getCurrentVoice() {
-    const voiceConfig = getVoiceConfig();
+  const voiceConfig = getVoiceConfig();
 
-    if (voiceConfig) {
-		    return voiceConfig.voice;
-    }
+  if (voiceConfig) {
+    return voiceConfig.voice;
+  }
 }
 
 function textToSpeech(text, slowMode, callback) {
 
-	loadVoiceList(function () {
+  loadVoiceList(function () {
 
-		const availableVoices = window.speechSynthesis.getVoices();
+    const availableVoices = window.speechSynthesis.getVoices();
 
     const voiceConfig = getVoiceConfig();
-		const currentVoice = voiceConfig.voice;
+    const currentVoice = voiceConfig.voice;
 
-		var voice = '';
+    var voice = '';
 
-		for (var i = 0; i < availableVoices.length; i++) {
-			if (availableVoices[i].name == currentVoice) {
-				voice = availableVoices[i];
-				break;
-			}
-		}
+    for (var i = 0; i < availableVoices.length; i++) {
+      if (availableVoices[i].name == currentVoice) {
+        voice = availableVoices[i];
+        break;
+      }
+    }
 
-		if (voice === '') {
-			voice = availableVoices[0];
-		}
+    if (voice === '') {
+      voice = availableVoices[0];
+    }
 
-		// new SpeechSynthesisUtterance object
+    var utter = new SpeechSynthesisUtterance();
+    utter.rate = slowMode ? voiceConfig.rate * 0.5 : voiceConfig.rate;
+    utter.pitch = voiceConfig.pitch;
+    utter.text = text;
+    utter.voice = voice;
 
-		var utter = new SpeechSynthesisUtterance();
-		utter.rate = slowMode ? voiceConfig.rate * 0.5 : voiceConfig.rate;;
-		utter.pitch = voiceConfig.pitch;
-		utter.text = text;
-		utter.voice = voice;
+    utter.onend = function () {
+      if (callback) {
+        callback(undefined);
+      }
+    }
 
-		// event after text has been spoken
-
-		utter.onend = function () {
-			if (callback) {
-				callback(undefined);
-			}
-		}
-
-		// speak
-		window.speechSynthesis.speak(utter);
-	});
+    window.speechSynthesis.speak(utter);
+  });
 }
 
 function arrayDifference(a, b) {
-  // From http://stackoverflow.com/a/1723220
   return a.filter(function (x) { return b.indexOf(x) < 0 });
 }
 
@@ -1142,7 +1147,6 @@ function calculateTransitions() {
   transformations = transformations.concat(trick_forms);
 }
 
-
 function updateQuestionPool() {
   var options = getOptions();
   var active_options = Object.keys(options).filter(function (key) { return options[key] == true; });
@@ -1158,8 +1162,7 @@ function updateQuestionPool() {
 
 function updateOptionSummary() {
   updateQuestionPool();
-  // Calculate how many questions will apply
-  // Use the json count_dict 
+  // Calculate how many questions will apply using the json count_dict
   var applicable = 0;
 
   var options = getOptions();
@@ -1178,18 +1181,19 @@ function updateOptionSummary() {
     });
   });
 
-  $("#questionCount").text(applicable);
+  setText(elById('questionCount'), applicable);
 
-  if (applicable < $('#numQuestions').val()) {
-    document.querySelector('#noQuestionError').style.display = 'block';
+  var numQuestionsEl = elById('numQuestions');
+  if (applicable < numQuestionsEl.value) {
+    elById('noQuestionError').style.display = 'block';
   } else {
-    document.querySelector('#noQuestionError').style.display = 'none';
+    elById('noQuestionError').style.display = 'none';
   }
 
   if (!options.plain && !options.polite) {
-    document.querySelector('#politePlainError').style.display = 'block';
+    elById('politePlainError').style.display = 'block';
   } else {
-    document.querySelector('#politePlainError').style.display = 'none';
+    elById('politePlainError').style.display = 'none';
   }
 }
 
@@ -1206,8 +1210,8 @@ function restoreDefaults() {
 function updateVoiceSelect() {
 
   const options = getOptions();
-  const voice_select_options = document.querySelector("#voice_select_options");
-  
+  const voice_select_options = elById('voice_select_options');
+
   if (options.use_voice) {
     voice_select_options.style.display = "block";
   } else {
@@ -1217,10 +1221,10 @@ function updateVoiceSelect() {
 
 function updateVoiceSelection() {
 
-  const newSelection = document.querySelector("#voice_select").selectedOptions[0].text;
+  const newSelection = elById('voice_select').selectedOptions[0].text;
 
   const voiceConfig = {
-    voice: document.querySelector("#voice_select").selectedOptions[0].text,
+    voice: elById('voice_select').selectedOptions[0].text,
     rate: 1,
     pitch: 1
   };
@@ -1229,9 +1233,11 @@ function updateVoiceSelection() {
 }
 
 function explain() {
-  $('#explanation').show();
-  $('#message').hide();
-  $('#explain-proceed-button').focus();
+  show(elById('explanation'));
+  hide(elById('message'));
+
+  var explainProceedButton = elById('explain-proceed-button');
+  if (explainProceedButton) explainProceedButton.focus();
 }
 
 function getOptions() {
@@ -1239,15 +1245,18 @@ function getOptions() {
   var result = {};
 
   configOptions.options.forEach(function (option) {
-    result[option] = $('#' + option).is(':checked') != false;
+    var el = elById(option);
+    result[option] = el ? el.checked : false;
   });
 
   configOptions.selects.forEach(function (select) {
-    result[select] = $('#' + select).val();
+    var el = elById(select);
+    result[select] = el ? el.value : "";
   });
 
   configOptions.inputs.forEach(function (input) {
-    result[input] = $('#' + input).val();
+    var el = elById(input);
+    result[input] = el ? el.value : "";
   });
 
   return result;
@@ -1263,20 +1272,22 @@ function loadOptions() {
 
     configOptions.options.forEach(function (option) {
       if (storedOptions[option] != undefined) {
-        $(`#${option}`).prop('checked', storedOptions[option]);
+        var el = elById(option);
+        if (el) el.checked = storedOptions[option];
       }
     });
 
     configOptions.selects.forEach(function (select) {
       if (storedOptions[select] != undefined) {
-        $(`#${select} [value=${storedOptions[select]}]`).attr('selected', false)
-        $(`#${select} [value=${storedOptions[select]}]`).attr('selected', 'selected')
+        var el = elById(select);
+        if (el) el.value = storedOptions[select];
       }
     });
 
     configOptions.inputs.forEach(function (input) {
       if (storedOptions[input] != undefined) {
-        $(`#${input}`).val(storedOptions[input]);
+        var el = elById(input);
+        if (el) el.value = storedOptions[input];
       }
     });
   }
@@ -1327,11 +1338,10 @@ function calculateConjugations(word, conjugation) {
 function calculateAllConjugations() {
 
   Object.keys(words).forEach(function (word) {
-    
+
     words[word].conjugations = {
       "dictionary": { forms: [words[word].dictionary] },
     };
-  
 
     var group = words[word].group;
     Object.keys(rules[group]).forEach(function (conjugation) {
@@ -1340,100 +1350,133 @@ function calculateAllConjugations() {
   });
 }
 
-$('window').ready(function () {
+function runMain() {
+  calculateAllConjugations();
+  calculateTransitions();
+  loadOptions();
+  restoreDefaults();
+  updateOptionSummary();
+  showSplash();
+}
 
-  showLoadingIndicator();
-
-  var promises = [];
-
-
-  var promise1 = $.getJSON("./words.json")
-    .done(function(data) {
-      words = data;
-    })
-    .fail(function(jqXHR, textStatus, errorThrown) {
-      console.error('không load được từ', textStatus, errorThrown);
-    });
-  
-  promises.push(promise1);
-
-  var promise2 = $.getJSON("./count.json")
-    .done(function(data) {
-      count_dict = data;
-    })
-    .fail(function(jqXHR, textStatus, errorThrown) {
-      console.error('không load được từ', textStatus, errorThrown);
-    });
-
-  promises.push(promise2);
-
-  var promise3 = $.getJSON("./grp_sample.json")
-      .done(function(data) {
-        grp_sample = data;
-      })
-      .fail(function(jqXHR, textStatus, errorThrown) {
-        console.error('không load được từ', textStatus, errorThrown);
-      });
-    
-    promises.push(promise3);
-
-  $.when.apply($, promises).done(function() {
-    hideLoadingIndicator();
-  });
-  function showLoadingIndicator() {
-    // console.log("loading....");
-  }
-  function hideLoadingIndicator() {
-    // console.log("complete");
+function loadData() {
+  return Promise.all([
+    fetch('./words.json').then(function (res) { return res.json(); }),
+    fetch('./count.json').then(function (res) { return res.json(); }),
+    fetch('./grp_sample.json').then(function (res) { return res.json(); })
+  ]).then(function (results) {
+    words = results[0];
+    count_dict = results[1];
+    grp_sample = results[2];
     runMain();
+  }).catch(function (error) {
+    console.error('không load được dữ liệu', error);
+  });
+}
+
+function init() {
+
+  var answerEl = elById('answer');
+  if (answerEl) {
+    answerEl.addEventListener('input', processAnswerKey);
+    answerEl.addEventListener('keydown', processAnswerKeyDown);
   }
-  
-	// if (window.speechSynthesis) {
-  //   populateVoiceList();
-  //   $('#useVoiceSection').show();
-  //   $('input#use_voice').click(updateVoiceSelect);
-  //   $('select#voice_select').on('change', updateVoiceSelection);
-  // }
-  function runMain (){
-    calculateAllConjugations();
-    calculateTransitions();
-    loadOptions();
-    restoreDefaults();
 
-    $('#go').click(startQuiz);
-    $('#defaults').click(restoreDefaults);
-    $('#backToStart').click(showSplash);
-    $('#stopQuiz').click(confirmAndStopQuiz);
+  var quizForm = document.querySelector('form[name="quizForm"]');
+  if (quizForm) {
+    quizForm.addEventListener('submit', function (event) {
+      event.preventDefault();
+      processAnswer();
+    });
+  }
 
-    $('.select-all-btn').click(function (e) {
-      e.preventDefault();
-      var group = $(this).data('group');
-      getGroupCheckboxes(group).prop('checked', true);
+  var go = elById('go');
+  if (go) go.addEventListener('click', startQuiz);
+
+  var defaults = elById('defaults');
+  if (defaults) {
+    defaults.addEventListener('click', function (event) {
+      event.preventDefault();
+      restoreDefaults();
+    });
+  }
+
+  var backToStart = elById('backToStart');
+  if (backToStart) backToStart.addEventListener('click', showSplash);
+
+  var responseButton = elById('responseButton');
+  if (responseButton) responseButton.addEventListener('click', proceed);
+
+  var explainProceedButton = elById('explain-proceed-button');
+  if (explainProceedButton) explainProceedButton.addEventListener('click', proceed);
+
+  var stopQuiz = elById('stopQuiz');
+  if (stopQuiz) {
+    stopQuiz.addEventListener('click', function (event) {
+      event.preventDefault();
+      confirmAndStopQuiz();
+    });
+  }
+
+  qsa('.select-all-btn').forEach(function (btn) {
+    btn.addEventListener('click', function (event) {
+      event.preventDefault();
+      var group = btn.dataset.group;
+      getGroupCheckboxes(group).forEach(function (el) { el.checked = true; });
       updateOptionSummary();
       saveOptions();
     });
+  });
 
-    $('.deselect-all-btn').click(function (e) {
-      e.preventDefault();
-      var group = $(this).data('group');
-      getGroupCheckboxes(group).prop('checked', false);
+  qsa('.deselect-all-btn').forEach(function (btn) {
+    btn.addEventListener('click', function (event) {
+      event.preventDefault();
+      var group = btn.dataset.group;
+      getGroupCheckboxes(group).forEach(function (el) { el.checked = false; });
       updateOptionSummary();
       saveOptions();
     });
+  });
 
-    $('div.options input').click(updateOptionSummary);
-    $('select#questionFocus').on('change', updateOptionSummary);
-    $('input#trick').click(updateOptionSummary);
-    $('input#focus_mode').click(updateOptionSummary);
+  qsa('.options input').forEach(function (el) {
+    el.addEventListener('click', updateOptionSummary);
+  });
 
-    $('select').change(saveOptions);
-    $('input').change(saveOptions);
+  var questionFocus = elById('questionFocus');
+  if (questionFocus) questionFocus.addEventListener('change', updateOptionSummary);
 
-    updateOptionSummary();
+  var trick = elById('trick');
+  if (trick) trick.addEventListener('click', updateOptionSummary);
 
-    showSplash();
-  }
-});
+  var focusMode = elById('focus_mode');
+  if (focusMode) focusMode.addEventListener('click', updateOptionSummary);
+
+  qsa('select').forEach(function (el) {
+    el.addEventListener('change', saveOptions);
+  });
+
+  qsa('input').forEach(function (el) {
+    el.addEventListener('change', saveOptions);
+  });
+
+  qsa('#message .btn').forEach(function (btn) {
+    btn.addEventListener('click', function (event) {
+      event.preventDefault();
+      explain();
+    });
+  });
+}
+
+function boot() {
+  init();
+  loadData();
+}
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', boot);
+} else {
+  boot();
+}
 
 window.processAnswer = processAnswer;
 window.proceed = proceed;
