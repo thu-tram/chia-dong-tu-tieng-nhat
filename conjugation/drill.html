@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="vi">
 
 <head>
   <meta charset="UTF-8">
-  <meta property="og:title" content="Japanese Verb Conjugation Quiz" />
+  <meta property="og:title" content="Trang luyện tập chia động từ Tiếng Nhật" />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://landonjpginn.github.io/jp-verb-quiz/conjugation/drill.html" />
   <meta property="og:image" content="img/prev.png" />
@@ -17,11 +17,12 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@100..900&display=swap" rel="stylesheet">
 
-  <script defer src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+  <script defer src="https://code.jquery.com/jquery-3.7.1.min.js"
+    integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
   <script defer type="module" src="rules.js"></script>
   <script defer type="module" src="drill.js"></script>
 
-  <title>Lan-Don's Japanese Verb Conjugation Practice</title>
+  <title>Luyện tập chia động từ Tiếng Nhật của Lan-Don</title>
 </head>
 
 <body>
@@ -29,42 +30,41 @@
 
   <div id="splash" class="container mt-4">
 
-    <h2 class="text-center mb-4">Lan-Don's Japanese Conjugation Drill</h2>
-    <h6 class="text-center mb-4">Landon's extension to the widely popular <a href="https://wkdonc.github.io/conjugation/drill.html" target="_blank" rel="noopener noreferrer">Don's Japanese Conjugation Drill</a></h6>
-    <h6 class="text-center mb-4">Want to practice your japanese verbs and <a href="https://en.wikipedia.org/wiki/Japanese_conjugation" target="_blank" rel="noopener noreferrer">conjugation rules</a>? Select what you want to include or focus on and hit go!</h6>
-    
+    <h2 class="text-center mb-4">Trang luyện tập chia động từ Tiếng Nhật của Lan-Don</h2>
+    <h6 class="text-center mb-4">Muốn luyện tập gì thì bạn hãy chọn bên dưới rồi bấm Bắt đầu nha.</h6>
+
     <div class="row container">
       <dl class="questionOptions mx-auto mb-0">
         <div class="form-group">
           <dt>
-            <label for="numQuestions" class="col-form-label mr-2">Number of Questions</label>
+            <label for="numQuestions" class="col-form-label mr-2">Số câu hỏi</label>
           </dt>
           <dd>
-            <input class="mb-2 form-control" type="number" placeholder="Questions"
-              aria-label="Number of Questions" aria-describedby="basic-addon2" id="numQuestions" value="10">
+            <input class="mb-2 form-control" type="number" placeholder="Số câu hỏi" aria-label="Number of Questions"
+              aria-describedby="basic-addon2" id="numQuestions" value="10">
           </dd>
         </div>
         <div class="form-group">
           <dt>
-            <label for="questionFocus" class="col-form-label mr-2">Question Focus</label>
+            <label for="questionFocus" class="col-form-label mr-2">Câu hỏi sẽ tập trung vào</label>
           </dt>
           <dd>
             <select id="questionFocus" class="form-control" aria-label="Question Focus">
-              <option value="none">None</option>
-              <option value="politeness">Politeness</option>
-              <option value="negative">Negative</option>
-              <option value="past">Past</option>
-              <option value="te-form">て form</option>
-              <option value="progressive">Progressive</option>
-              <option value="desire">Desire</option>
-              <option value="volitional">Volitional</option>
-              <option value="potential">Potential</option>
-              <option value="conditional">Conditional(たら)</option>
-              <option value="provisional">Provisional Conditional(ば)</option>
-              <option value="imperative">Imperative</option>
-              <option value="passive">Passive</option>
-              <option value="causative">Causative</option>
-              <option value="tetakei">Godan て / た form</option>
+              <option value="none">Không</option>
+              <option value="politeness">Thể lịch sự (Thể ます)</option>
+              <option value="negative">Thể phủ định</option>
+              <option value="past">Thể quá khứ</option>
+              <option value="te-form">Thể て</option>
+              <option value="progressive">Thể tiếp diễn (ている)</option>
+              <option value="desire">Thể mong muốn (たい)</option>
+              <option value="volitional">Thể ý định / Thể ý chí</option>
+              <option value="potential">Thể khả năng</option>
+              <option value="conditional">Thể điều kiện (たら)</option>
+              <option value="provisional">Thể giả định / Thể điều kiện (ば)</option>
+              <option value="imperative">Thể mệnh lệnh</option>
+              <option value="passive">Thể bị động</option>
+              <option value="causative">Thể sai khiến</option>
+              <option value="tetakei">Dạng て / た của Động từ Godan</option>
             </select>
           </dd>
         </div>
@@ -73,21 +73,22 @@
 
     <div class="row justify-content-center mb-4 mt-4">
       <div class="col-4">
-        <button class="btn btn-primary col-12" type="button" id="go" onclick="event.preventDefault();">Go</button>
+        <button class="btn btn-primary col-12" type="button" id="go" onclick="event.preventDefault();">Bắt đầu</button>
       </div>
       <div class="col-4">
-        <button class="btn btn-secondary col-12" type="button" id="defaults" onclick="event.preventDefault();">Reset</button>
+        <button class="btn btn-secondary col-12" type="button" id="defaults" onclick="event.preventDefault();">Khởi động
+          lại</button>
       </div>
     </div>
 
-    
-    <div class="text-center mb-4">Question pool size: <span id="questionCount">...</span></div>
+
+    <div class="text-center mb-4">Số lượng câu hỏi đang có: <span id="questionCount">...</span></div>
 
 
     <div id="voiceSelectError" style="display: none">
-        <div class="row justify-content-center mb-2 ml-2 mr-2">
-             <div>You must select a voice first for speech synthesis.</div>
-        </div>
+      <div class="row justify-content-center mb-2 ml-2 mr-2">
+        <div>Bạn phải chọn một giọng đọc trước khi bật tính năng đọc thành tiếng.</div>
+      </div>
     </div>
 
     <div class="container options">
@@ -97,35 +98,36 @@
         <div class="col-4 text-center">
           <div class="form-group">
             <div style="display: inline-block">
-              <h4 class="text-left mt-2 mb-4">Forms</h4>
+              <h4 class="text-left mt-2 mb-4">Thể động từ & tính từ</h4>
               <div class="text-left ml-1 form-check"><input class="form-check-input" type="checkbox" id="plain"
-                  checked><label for="plain" class="form-check-label">Plain</label></div>
+                  checked><label for="plain" class="form-check-label">Thể thông thường</label></div>
               <div class="text-left ml-1 form-check"><input class="form-check-input" type="checkbox" id="polite"
-                  checked><label for="polite" class="form-check-label">Polite</label></div>
+                  checked><label for="polite" class="form-check-label">Thể lịch sự (Thể ます)</label></div>
               <div class="text-left ml-1 form-check"><input class="form-check-input" type="checkbox" id="negative"
-                  checked><label for="negative" class="form-check-label">Negative</label></div>
+                  checked><label for="negative" class="form-check-label">Thể phủ định</label></div>
               <div class="text-left ml-1 form-check"><input class="form-check-input" type="checkbox" id="past"
-                  checked><label for="past" class="form-check-label">Past</label></div>
+                  checked><label for="past" class="form-check-label">Thể quá khứ</label></div>
               <div class="text-left ml-1 form-check"><input class="form-check-input" type="checkbox" id="te-form"><label
-                  for="te-form" class="form-check-label">て form</label></div>
+                  for="te-form" class="form-check-label">Thể て</label></div>
               <div class="text-left ml-1 form-check"><input class="form-check-input" type="checkbox"
-                  id="progressive"><label for="progressive" class="form-check-label">Progressive</label></div>
+                  id="progressive"><label for="progressive" class="form-check-label">Thể tiếp diễn (ている)</label></div>
               <div class="text-left ml-1 form-check"><input class="form-check-input" type="checkbox" id="desire"><label
-                  for="desire" class="form-check-label">Desire</label></div>
+                  for="desire" class="form-check-label">Thể mong muốn (たい)</label></div>
               <div class="text-left ml-1 form-check"><input class="form-check-input" type="checkbox"
-                  id="volitional"><label for="volitional" class="form-check-label">Volitional</label></div>
+                  id="volitional"><label for="volitional" class="form-check-label">Thể ý định / Thể ý chí</label></div>
               <div class="text-left ml-1 form-check"><input class="form-check-input" type="checkbox"
-                  id="potential"><label for="potential" class="form-check-label">Potential</label></div>
+                  id="potential"><label for="potential" class="form-check-label">Thể khả năng</label></div>
               <div class="text-left ml-1 form-check"><input class="form-check-input" type="checkbox"
-                  id="conditional"><label for="conditional" class="form-check-label">Conditional(たら)</label></div>
+                  id="conditional"><label for="conditional" class="form-check-label">Thể điều kiện (たら)</label></div>
               <div class="text-left ml-1 form-check"><input class="form-check-input" type="checkbox"
-                  id="provisional"><label for="provisional" class="form-check-label">Provisional Conditional(ば)</label></div>
+                  id="provisional"><label for="provisional" class="form-check-label">Thể giả định / Thể điều kiện
+                  (ば)</label></div>
               <div class="text-left ml-1 form-check"><input class="form-check-input" type="checkbox"
-                  id="imperative"><label for="imperative" class="form-check-label">Imperative</label></div>
+                  id="imperative"><label for="imperative" class="form-check-label">Thể mệnh lệnh</label></div>
               <div class="text-left ml-1 form-check"><input class="form-check-input" type="checkbox" id="passive"><label
-                  for="passive" class="form-check-label">Passive</label></div>
+                  for="passive" class="form-check-label">Thể bị động</label></div>
               <div class="text-left ml-1 form-check"><input class="form-check-input" type="checkbox"
-                  id="causative"><label for="causative" class="form-check-label">Causative</label></div>
+                  id="causative"><label for="causative" class="form-check-label">Thể sai khiến</label></div>
             </div>
           </div>
         </div>
@@ -137,23 +139,23 @@
             <div class="col-md-6 text-center">
               <div class="form-group">
                 <div style="display: inline-block">
-                  <h4 class="text-left mt-2 mb-4">Regular Verbs</h4>
+                  <h4 class="text-left mt-2 mb-4">Động từ thường</h4>
                   <div class="text-left ml-1 form-check"><input class="form-check-input" type="checkbox" id="godan"
-                      checked><label for="godan" class="form-check-label">Godan verbs</label></div>
+                      checked><label for="godan" class="form-check-label">Động từ Godan</label></div>
                   <div class="text-left ml-1 form-check"><input class="form-check-input" type="checkbox" id="ichidan"
-                      checked><label for="ichidan" class="form-check-label">Ichidan verbs</label></div>
+                      checked><label for="ichidan" class="form-check-label">Động từ Ichidan</label></div>
 
-                  <div class="text-left ml-1 specials">Irregular Verbs</div>
+                  <div class="text-left ml-1 specials">Động từ bất quy tắc</div>
                   <div class="text-left ml-1 form-check"><input class="form-check-input" type="checkbox" id="suru"
-                    checked><label for="suru" class="form-check-label">する verbs</label></div>
+                      checked><label for="suru" class="form-check-label">Động từ nhóm する</label></div>
                   <div class="text-left ml-1 form-check"><input class="form-check-input" type="checkbox" id="kuru"
-                      checked><label for="kuru" class="form-check-label">来る verb</label></div>
+                      checked><label for="kuru" class="form-check-label">Động từ 来る (Kuru)</label></div>
                   <div class="text-left ml-1 form-check"><input class="form-check-input" type="checkbox" id="iku"
-                      checked><label for="iku" class="form-check-label">行く verb</label></div>
+                      checked><label for="iku" class="form-check-label">Động từ 行く (Iku)</label></div>
                   <div class="text-left ml-1 form-check"><input class="form-check-input" type="checkbox" id="aru"
-                      checked><label for="aru" class="form-check-label">ある verb</label></div>
+                      checked><label for="aru" class="form-check-label">Động từ ある (Aru)</label></div>
                   <div class="text-left ml-1 form-check"><input class="form-check-input" type="checkbox" id="iru"
-                      checked><label for="iru" class="form-check-label">いる verbs</label></div>
+                      checked><label for="iru" class="form-check-label">Động từ いる (Iru)</label></div>
 
                 </div>
               </div>
@@ -162,27 +164,27 @@
             <div class="col-md-6 text-center">
               <div class="form-group">
                 <div style="display: inline-block">
-                  <h4 class="text-left mt-2 mb-4">Adjectives</h4>
+                  <h4 class="text-left mt-2 mb-4">Tính từ</h4>
                   <div class="text-left ml-1 form-check"><input class="form-check-input" type="checkbox"
-                      id="i-adjective"><label for="i-adjective" class="form-check-label">い adjectives</label></div>
+                      id="i-adjective"><label for="i-adjective" class="form-check-label">Tính từ đuôi い</label></div>
                   <div class="text-left ml-1 form-check"><input class="form-check-input" type="checkbox"
-                      id="na-adjective"><label for="na-adjective" class="form-check-label">な adjectives</label></div>
-                  <div class="text-left ml-1 specials">Irregular Adjectives</div>
+                      id="na-adjective"><label for="na-adjective" class="form-check-label">Tính từ đuôi な</label></div>
+                  <div class="text-left ml-1 specials">Tính từ bất quy tắc</div>
                   <div class="text-left ml-1 form-check"><input class="form-check-input" type="checkbox" id="ii"><label
-                      for="ii" class="form-check-label">いい adjective</label></div>
-                  <div class="text-left ml-1 specials">Filters</div>
-                  <div class="text-left ml-1 form-check"><input class="form-check-input" type="checkbox" id="common"><label
-                    for="common" class="form-check-label">Top 100 Common Verbs</label></div>
+                      for="ii" class="form-check-label">Tính từ いい</label></div>
+                  <div class="text-left ml-1 specials">Bộ lọc</div>
+                  <div class="text-left ml-1 form-check"><input class="form-check-input" type="checkbox"
+                      id="common"><label for="common" class="form-check-label">100 động từ phổ biến nhất</label></div>
                   <div class="text-left ml-1 form-check"><input class="form-check-input" type="checkbox" id="n5"><label
-                    for="n5" class="form-check-label">JLPT N5</label></div>
+                      for="n5" class="form-check-label">JLPT N5</label></div>
                   <div class="text-left ml-1 form-check"><input class="form-check-input" type="checkbox" id="n4"><label
-                    for="n4" class="form-check-label">JLPT N4</label></div>
+                      for="n4" class="form-check-label">JLPT N4</label></div>
                   <div class="text-left ml-1 form-check"><input class="form-check-input" type="checkbox" id="n3"><label
-                    for="n3" class="form-check-label">JLPT N3</label></div>
+                      for="n3" class="form-check-label">JLPT N3</label></div>
                   <div class="text-left ml-1 form-check"><input class="form-check-input" type="checkbox" id="n2"><label
-                    for="n2" class="form-check-label">JLPT N2</label></div>
+                      for="n2" class="form-check-label">JLPT N2</label></div>
                   <div class="text-left ml-1 form-check"><input class="form-check-input" type="checkbox" id="n1"><label
-                    for="n1" class="form-check-label">JLPT N1</label></div>
+                      for="n1" class="form-check-label">JLPT N1</label></div>
                 </div>
               </div>
             </div>
@@ -192,50 +194,55 @@
     </div>
 
     <div id="politePlainError" style="display: none">
-        <div class="text-center mb-2">You must select at least one of 'Plain' and 'Polite'.</div>
+      <div class="text-center mb-2">Chọn ít nhất một cái: 'Thể thường' và 'Thể lịch sự'.</div>
     </div>
 
     <div id="noQuestionError" style="display: none">
-      <div class="text-center mb-2">Not enough available questions.</div>
-  </div>
+      <div class="text-center mb-2">Không đủ số câu hỏi để bạn luyện tập.</div>
+    </div>
 
     <div class="row justify-content-center mt-3 ml-2 mr-2">
-        <div id="voice_select_options" class="form-check" style="display: none">
-            <label class="form-check-label" for="voice_select">Select voice (Notice: Online voices may incur data charges!)</label>
-            <br>
-            <div>Also: Non-Japanese voices may not work at all.</div>
-            <br>
-            <select id="voice_select"><option><i>Select voice...</i></option></select>
-        </div>
+      <div id="voice_select_options" class="form-check" style="display: none">
+        <label class="form-check-label" for="voice_select">Chọn giọng đọc (Lưu ý: Giọng đọc trực tuyến có thể phát sinh phí dữ liệu!)</label>
+        <br>
+        <div>Lưu ý thêm: Các giọng đọc không phải Tiếng Nhật có thể sẽ không hoạt động.</div>
+        <br>
+        <select id="voice_select">
+          <option><i>Chọn giọng đọc...</i></option>
+        </select>
+      </div>
     </div>
 
     <div class="row justify-content-center mt-3 ml-2 mr-2">
       <div class="form-group">
         <div class="form-check"><input class="form-check-input" type="checkbox" id="trick" checked><label
-            class="form-check-label" for="trick">Trick questions (answers may be the same as the given form)</label>
+            class="form-check-label" for="trick">Cú lừa (Đáp án có thể chính là dạng từ đang hiện trên màn hình)</label>
         </div>
         <div class="form-check"><input class="form-check-input" type="checkbox" id="kana"><label
-            class="form-check-label" for="kana">Use hiragana throughout the test (no kanji)</label></div>
+            class="form-check-label" for="kana">Chỉ dùng hiragana (không hán tự)</label></div>
         <div class="form-check"><input class="form-check-input" type="checkbox" id="furigana_always" checked><label
-            class="form-check-label" for="furigana_always">Show furigana on questions</label></div>
+            class="form-check-label" for="furigana_always">Hiện furigana trong câu hỏi</label></div>
         <!-- Reccomended by toxinu -->
         <div class="form-check" id="goToNextQuestion">
           <input class="form-check-input" type="checkbox" id="go_to_next_question">
-          <label class="form-check-label" for="go_to_next_question">Automatically go to the next question on success</label>
+          <label class="form-check-label" for="go_to_next_question">Tự động chuyển qua câu kế tiếp nếu đã trả lời
+            xong</label>
         </div>
         <div class="form-check" id="autoShowExplanatioj">
           <input class="form-check-input" type="checkbox" id="auto_show_explanation">
-          <label class="form-check-label" for="auto_show_explanation">Automatically show the explanation on error</label>
+          <label class="form-check-label" for="auto_show_explanation">Tự động hiện phần giải thích cho đáp án</label>
         </div>
         <!-- <div class="form-check" id="useVoiceSection" style="display: none"><input class="form-check-input" type="checkbox" id="use_voice"><label
             class="form-check-label" for="use_voice">Use speech synthesis (experimental)</label></div> -->
       </div>
     </div>
     <div class="row justify-content-center mt-3 ml-2 mr-2">
-      <p>Want to leave some feedback? <a href="https://forms.gle/QeJ33fNda7SD79b89" target="_blank" rel="noopener noreferrer">Report an issue here</a>.</p>
-    </div> 
+      <p>Có vấn đề gì thì bạn có thể gửi <a href="https://github.com/thu-tram/chia-dong-tu-tieng-nhat/issues"
+          target="_blank" rel="noopener noreferrer">qua đây</a>.</p>
+    </div>
     <div class="row justify-content-center mt-0 ml-2 mr-2">
-      <p>-<a href="https://github.com/LandonJPGinn/jp-verb-quiz" target="_blank" rel="noopener noreferrer">GitHub Repo</a>-</p>
+      <p>-<a href="https://github.com/thu-tram/chia-dong-tu-tieng-nhat" target="_blank" rel="noopener noreferrer">GitHub
+          của dự án</a>-</p>
     </div>
 
   </div>
@@ -263,19 +270,19 @@
     <div class="row mt-4">
       <div class="col-12">
         <div class="text-center">
-          <button class="btn btn-primary mb-2" id="backToStart">Back to Start</button>
+          <button class="btn btn-primary mb-2" id="backToStart">Về trang chủ</button>
         </div>
       </div>
     </div>
 
-    <div class="row mt-4">
+    <!-- <div class="row mt-4">
       <div class="col-12">
         <div class="text-center">
           <a href="https://venmo.com/u/Landon-Ginn" target="_blank" rel="noopener noreferrer"><img src="img/tipqr.png" alt="Like the game? Leave a tip!" width="128"></a><br>
           <p>Consider tipping!</p>
         </div>
       </div>
-    </div>
+    </div> -->
 
     <div class="row col-12 mt-4 mx-auto">
 
@@ -315,7 +322,7 @@
           <div class="col-12 text-center" id="correction"></div>
         </div>
         <div class="row mt-4">
-          <button class="btn btn-primary mb-2 mx-auto" onclick="javascript:explain()">Explain</button>
+          <button class="btn btn-primary mb-2 mx-auto" onclick="javascript:explain()">Giải thích</button>
         </div>
       </div>
 
@@ -324,69 +331,65 @@
     <div class="row ml-4 mr-4">
 
       <div style="display: none" id="explanation" class="mt-4 col mx-auto">
-        <h4>Root Word</h4>
+        <h4>Từ gốc</h4>
         <div class="explain-answer-single">
-          <p><span id="explain-given-base"></span> - meaning: <span id="explain-meaning"></span>.</p>
+          <p><span id="explain-given-base"></span> - nghĩa là: <span id="explain-meaning"></span>.</p>
           <div class="indented">
-            <p><a id="jisho-link" href="#" target="_blank" rel="noopener noreferrer"><span class="emphasis2"><span id="explain-sentence-jp"></span></span></a><br>
-            <span class="subtext2"><span id="explain-sentence-en"></span></span></p>
+            <p><a id="jisho-link" href="#" target="_blank" rel="noopener noreferrer"><span class="emphasis2"><span
+                    id="explain-sentence-jp"></span></span></a><br>
+              <span class="subtext2"><span id="explain-sentence-en"></span></span>
+            </p>
           </div>
           <div>
             <p><span id="explain-notes"></span>
           </div>
         </div>
 
-        <h3>1. Recognise the given form</h3>
+        <h3>1. Nhận biết thể của từ được cho</h3>
 
-        <p><span id="explain-given"></span> is the <span id="explain-given-tags"></span> form of the <span
+        <p><span id="explain-given"></span> là dạng <span id="explain-given-tags"></span> của <span
             id="explain-group"></span> <span class="explain-given-dictionary"></span>.</p>
 
-        <h3>2. Change the form</h3>
+        <h3>2. Thay đổi thể</h3>
 
         <div class="explain-answer-single">
-          <p class="explain-no-trick">The answer is the <span class="explain-answer-tags"></span> form of the word
-            because the question asked for the <span class="highlight"><span class="explain-transform"></span></span>
-            version.</p>
-          <p class="explain-trick">The question asked for the <span class="highlight"><span
-                class="explain-transform"></span></span> version. However, this was already the case and so it was a
-            trick question.</p>
+          <p class="explain-no-trick">Đáp án là dạng <span class="explain-answer-tags"></span> của từ
+            vì câu hỏi yêu cầu chuyển sang thể <span class="highlight"><span class="explain-transform"></span></span>.
+          </p>
+          <p class="explain-trick">Câu hỏi yêu cầu chuyển sang thể <span class="highlight"><span
+                class="explain-transform"></span></span>. Tuy nhiên, từ vốn dĩ đã ở dạng này nên đây là một câu hỏi mẹo.
+          </p>
         </div>
 
         <div class="explain-answer-multiple">
-          <p class="explain-no-trick">The answers are the <span class="explain-answer-tags"></span> forms of the word
-            because the question asked for a <span class="highlight"><span class="explain-transform"></span></span>
-            version.</p>
-          <p class="explain-trick">The question asked for a <span class="highlight"><span
-                class="explain-transform"></span></span> form of the word. However, this was already the case and so it
-            was a trick question.</p>
+          <p class="explain-no-trick">Các đáp án đúng là các dạng <span class="explain-answer-tags"></span> của từ
+            vì câu hỏi yêu cầu chuyển sang thể <span class="highlight"><span class="explain-transform"></span></span>.
+          </p>
+          <p class="explain-trick">Câu hỏi yêu cầu chuyển sang thể <span class="highlight"><span
+                class="explain-transform"></span></span>. Tuy nhiên, từ vốn dĩ đã ở dạng này nên đây là một câu hỏi mẹo.
+          </p>
         </div>
 
-        <h3>3. Produce the required form</h3>
+        <h3>3. Viết đáp án theo yêu cầu</h3>
 
-        <p class="explain-answer-single">The correct answer is the
-          <span class="explain-answer-tags2"></span> form: <span class="explain-answer"></span>
+        <p class="explain-answer-single">Câu trả lời đúng là dạng
+          <span class="explain-answer-tags2"></span>: <span class="explain-answer"></span>
         </p>
 
         <div class="explain-answer-multiple">
           <p>
-            The possible correct answers are the <span class="explain-answer-tags2"></span> forms:
+            Câu trả lời đúng là: <span class="explain-answer-tags2"></span>:
           </p>
           <ul class="explain-answer-as-list"></ul>
         </div>
 
-        <div class="explain-answer-single">
-          <p>
-            Find an issue? <a href="https://forms.gle/QeJ33fNda7SD79b89" target="_blank" rel="noopener noreferrer">Report it here</a>.
-          </p>
-        </div>
         <div class="row col-12 mt-4">
           <button id="explain-proceed-button" class="centre btn btn-primary mb-2 mx-auto"
-            onclick="javascript:proceed()">OK, next question</button>
+            onclick="javascript:proceed()">Câu hỏi tiếp theo</button>
         </div>
 
       </div>
     </div>
-
 
   </div>
 

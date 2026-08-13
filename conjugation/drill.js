@@ -2,6 +2,66 @@
 
 import rules from './rules.js';
 
+const tagTranslations = {
+  "plain": "thường",
+  "polite": "lịch sự",
+  "negative": "phủ định",
+  "past": "quá khứ",
+  "te-form": "thể て",
+  "progressive": "tiếp diễn",
+  "desire": "mong muốn",
+  "volitional": "ý chí / ý định",
+  "potential": "khả năng",
+  "conditional": "điều kiện (たら)",
+  "provisional": "giả định (ば)",
+  "imperative": "mệnh lệnh",
+  "passive": "bị động",
+  "causative": "sai khiến",
+  "dictionary": "từ điển",
+  "affirmative": "khẳng định",
+  "present": "hiện tại",
+  "active": "chủ động"
+};
+
+const phraseTranslations = {
+  "affirmative": "khẳng định",
+  "negative": "phủ định",
+  "present": "hiện tại",
+  "past": "quá khứ",
+  "plain": "thông thường (thể ngắn)",
+  "polite": "lịch sự (thể ます)",
+  "て": "thể て",
+  "non-て": "không phải thể て",
+  "potential": "khả năng",
+  "non-potential": "không khả năng",
+  "conditional": "điều kiện (たら)",
+  "non-conditional": "không điều kiện",
+  "provisional": "giả định (ば)",
+  "non-provisional": "không giả định",
+  "imperative": "mệnh lệnh",
+  "non-imperative": "không mệnh lệnh",
+  "causative": "sai khiến",
+  "non-causative": "không sai khiến",
+  "passive": "bị động",
+  "active": "chủ động",
+  "progressive": "tiếp diễn (ている)",
+  "non-progressive": "không tiếp diễn",
+  "&apos;desire&apos;": "mong muốn (たい)",
+  "'desire'": "mong muốn (たい)",
+  "&apos;non-desire&apos;": "không mong muốn",
+  "'non-desire'": "không mong muốn",
+  "volitional": "ý định / ý chí",
+  "non-volitional": "không ý định"
+};
+
+function translateTag(tag) {
+  return tagTranslations[tag] || tag;
+}
+
+function translateTags(tags) {
+  return tags.filter(function (t) { return t !== ""; }).map(translateTag);
+}
+
 var words;
 var count_dict;
 var grp_sample;
@@ -113,8 +173,10 @@ var japaneseTextPattern = /^[\u{3040}-\u{309f}\u{30a0}-\u{30ff}\u{3190}-\u{319f}
 
 function commaList(items, conjunction) {
 
-  if (conjunction == undefined) {
-    conjunction = "and";
+  if (conjunction == undefined || conjunction === "or") {
+    conjunction = "hoặc";
+  } else if (conjunction === "and") {
+    conjunction = "và";
   }
 
   var result = "";
@@ -366,32 +428,32 @@ function validQuestion(entry, forms, transformation, options) {
 function generateQuestion() {
 
   var questionText = {
-    "affirmative": "<span class='first'>make</span> the following <span class='emphasis'>affirmative</span>",
-    "negative": "<span class='first'>make</span> the following <span class='emphasis'>negative</span>",
-    "present": "<span class='first'>convert</span> the following to the <span class='emphasis'>present tense</span>",
-    "past": "<span class='first'>convert</span> the following to the <span class='emphasis'>past tense</span>",
-    "plain": "<span class='first'>make</span> the following <span class='emphasis'>informal</span>",
-    "polite": "<span class='first'>make</span> the following <span class='emphasis'>polite</span>",
-    "て": "<span class='emphasis first'>add</span> the <span class='emphasis'>て pattern</span> to the following",
-    "non-て": "<span class='emphasis first'>remove</span> the <span class='emphasis'>て pattern</span> from the following",
-    "potential": "<span class='first'>make</span> the following <span class='emphasis'>potential</span>",
-    "non-potential": "<span class='first'>make</span> the following <span class='emphasis'>non-potential</span>",
-    "conditional": "<span class='first'>make</span> the following <span class='emphasis'>conditional</span>",
-    "non-conditional": "<span class='first'>make</span> the following <span class='emphasis'>non-conditional</span>",
-    "provisional": "<span class='first'>make</span> the following <span class='emphasis'>provisional</span>",
-    "non-provisional": "<span class='first'>make</span> the following <span class='emphasis'>non-provisional</span>",
-    "imperative": "<span class='first'>make</span> the following <span class='emphasis'>imperative</span>",
-    "non-imperative": "<span class='first'>make</span> the following <span class='emphasis'>non-imperative</span>",
-    "causative": "<span class='first'>make</span> the following <span class='emphasis'>causative</span>",
-    "non-causative": "<span class='first'>make</span> the following <span class='emphasis'>non-causative</span>",
-    "passive": "<span class='first'>make</span> the following <span class='emphasis'>passive</span>",
-    "active": "<span class='first'>make</span> the following <span class='emphasis'>active</span>",
-    "progressive": "<span class='first'>make</span> the following <span class='emphasis'>progressive</span>",
-    "non-progressive": "<span class='first'>make</span> the following <span class='emphasis'>non-progressive</span>",
-    "&apos;desire&apos;": "<span class='first'>convert</span> the following to the <span class='emphasis'>&apos;desire&apos;</span> form",
-    "&apos;non-desire&apos;": "<span class='first'>convert</span> the following to the <span class='emphasis'>&apos;non-desire&apos;</span> form",
-    "volitional": "<span class='first'>make</span> the following <span class='emphasis'>volitional</span>",
-    "non-volitional": "<span class='first'>make</span> the following <span class='emphasis'>non-volitional</span>"
+    "affirmative": "<span class='first'>chuyển</span> từ sau sang <span class='emphasis'>thể khẳng định</span>",
+    "negative": "<span class='first'>chuyển</span> từ sau sang <span class='emphasis'>thể phủ định</span>",
+    "present": "<span class='first'>chuyển</span> từ sau sang <span class='emphasis'>thì hiện tại</span>",
+    "past": "<span class='first'>chuyển</span> từ sau sang <span class='emphasis'>thì quá khứ</span>",
+    "plain": "<span class='first'>chuyển</span> từ sau sang <span class='emphasis'>thể thường (thể ngắn)</span>",
+    "polite": "<span class='first'>chuyển</span> từ sau sang <span class='emphasis'>thể lịch sự (thể ます)</span>",
+    "て": "<span class='emphasis first'>chuyển</span> từ sau sang <span class='emphasis'>thể て</span>",
+"non-て": "<span class='emphasis first'>bỏ</span> <span class='emphasis'>thể て</span> ở từ sau",
+    "potential": "<span class='first'>chuyển</span> từ sau sang <span class='emphasis'>thể khả năng</span>",
+    "non-potential": "<span class='first'>bỏ</span> <span class='emphasis'>thể khả năng</span> ở từ sau (đưa về thể thường)",
+    "conditional": "<span class='first'>chuyển</span> từ sau sang <span class='emphasis'>thể điều kiện (たら)</span>",
+    "non-conditional": "<span class='first'>bỏ</span> <span class='emphasis'>thể điều kiện (たら)</span> ở từ sau",
+    "provisional": "<span class='first'>chuyển</span> từ sau sang <span class='emphasis'>thể giả định (ば)</span>",
+    "non-provisional": "<span class='first'>bỏ</span> <span class='emphasis'>thể giả định (ば)</span> ở từ sau",
+    "imperative": "<span class='first'>chuyển</span> từ sau sang <span class='emphasis'>thể mệnh lệnh</span>",
+    "non-imperative": "<span class='first'>bỏ</span> <span class='emphasis'>thể mệnh lệnh</span> ở từ sau",
+    "causative": "<span class='first'>chuyển</span> từ sau sang <span class='emphasis'>thể sai khiến</span>",
+    "non-causative": "<span class='first'>bỏ</span> <span class='emphasis'>thể sai khiến</span> ở từ sau",
+    "passive": "<span class='first'>chuyển</span> từ sau sang <span class='emphasis'>thể bị động</span>",
+    "active": "<span class='first'>chuyển</span> từ sau sang <span class='emphasis'>thể chủ động</span>",
+    "progressive": "<span class='first'>chuyển</span> từ sau sang <span class='emphasis'>thể tiếp diễn (ている)</span>",
+    "non-progressive": "<span class='first'>bỏ</span> <span class='emphasis'>thể tiếp diễn (ている)</span> ở từ sau",
+    "&apos;desire&apos;": "<span class='first'>chuyển</span> từ sau sang <span class='emphasis'>thể mong muốn (たい)</span>",
+    "&apos;non-desire&apos;": "<span class='first'>bỏ</span> <span class='emphasis'>thể mong muốn (たい)</span> ở từ sau",
+    "volitional": "<span class='first'>chuyển</span> từ sau sang <span class='emphasis'>thể ý định / ý chí</span>",
+    "non-volitional": "<span class='first'>bỏ</span> <span class='emphasis'>thể ý định / ý chí</span> ở từ sau"
   };
 
   var entry;
@@ -471,7 +533,7 @@ function generateQuestion() {
 
   var questionFirstHalf = thisQuestionText;
   var questionSecondHalf = givenWord;
-  var question = questionFirstHalf.replace("the following", questionSecondHalf);
+  var question = questionFirstHalf.replace("từ sau", "từ " + questionSecondHalf).replace("từ sau", "từ " + questionSecondHalf);
 
   var answer = kanjiForms[to_form];
   var answer2 = kanaForms[to_form];
@@ -485,7 +547,7 @@ function generateQuestion() {
   $('#questionFirstHalf').html(questionFirstHalf);
 
   if (options.use_voice) {
-    $('#questionSecondHalf').html("<div id='speechSpace'><i>Press Space for word</i><br><div class='halfSpeed'>Use Shift key for half speed</div></div>");
+    $('#questionSecondHalf').html("<div id='speechSpace'><i>Nhấn phím Space để nghe từ</i><br><div class='halfSpeed'>Nhấn giữ Shift để nghe với tốc độ chậm hơn</div></div>");
   } else {
     $('#questionSecondHalf').html(questionSecondHalf);
   }
@@ -506,16 +568,16 @@ function generateQuestion() {
   var data = window.questionData;
 
   var groupLabels = {
-    "godan": "godan verb",
-    "ichidan": "ichidan verb",
-    "iku": "godan verb",
-    "suru": "suru verb",
-    "kuru": "special verb",
-    "aru": "aru verb",
-    "iru": "iru verb",
-    "i-adjective": "い-adjective",
-    "ii": "い-adjective",
-    "na-adjective": "な-adjective",
+    "godan": "động từ Godan",
+    "ichidan": "động từ Ichidan",
+    "iku": "động từ Godan đặc biệt (行く)",
+    "suru": "động từ Suru",
+    "kuru": "động từ Kuru",
+    "aru": "động từ đặc biệt ある",
+    "iru": "động từ đặc biệt いる",
+    "i-adjective": "tính từ đuôi い",
+    "ii": "tính từ đặc biệt いい",
+    "na-adjective": "tính từ đuôi な",
   };
 
   var dictionary = words[data.entry].conjugations["dictionary"].forms;
@@ -526,7 +588,7 @@ function generateQuestion() {
   var audio = words[data.entry].audio;
 
   var anchor = document.getElementById('jisho-link');
-  anchor.setAttribute('href', 'https://jisho.org/search/' + sentenceJP);
+  anchor.setAttribute('href', 'https://mazii.net/vi-VN/search/word/javi/' + sentenceJP);
 
   if (words[data.entry].group == "na-adjective") {
     for (var i = 0; i < dictionary.length; i++) {
@@ -546,13 +608,13 @@ function generateQuestion() {
   $('#explain-sentence-jp').html(sentenceJP);
   $('#explain-sentence-en').html(sentenceEN);
   $('#explain-given').html(givenWord);
-  $('#explain-given-tags').html(data.transformation.from_tags.map(function (tag) { return "<span class='tag'>" + tag + "</span>"; }).join(" "));
+  $('#explain-given-tags').html(translateTags(data.transformation.from_tags).map(function (tag) { return "<span class='tag'>" + tag + "</span>"; }).join(" "));
   $('.explain-given-dictionary').html(dictionary);
   $('#explain-group').html(groupLabels[words[data.entry].group]);
-  $('.explain-transform').html(data.transformation.phrase);
-  $('.explain-answer-tags').html(data.transformation.to_tags.map(function (tag) { return "<span class='tag'>" + tag + "</span>"; }).join(" "));
-  $('.explain-answer-tags2').html(data.transformation.to_tags.join(" "));
-  $('.explain-answer').html(commaList(questionData.answerWithFurigana, "or"));
+  $('.explain-transform').html(phraseTranslations[data.transformation.phrase] || data.transformation.phrase);
+  $('.explain-answer-tags').html(translateTags(data.transformation.to_tags).map(function (tag) { return "<span class='tag'>" + tag + "</span>"; }).join(" "));
+  $('.explain-answer-tags2').html(translateTags(data.transformation.to_tags).join(" "));
+  $('.explain-answer').html(commaList(questionData.answerWithFurigana, "hoặc"));
 
   $('.explain-answer-as-list').empty();
 
@@ -640,7 +702,7 @@ function processAnswer() {
     $('#message').hide();
   } else {
     $('#message').show();
-    $('#message #correction').html("The correct answer was " + commaList(questionData.answerWithFurigana, "or"));
+    $('#message #correction').html("Đáp án đúng là " + commaList(questionData.answerWithFurigana, "hoặc"));
   }
 
   $('#inputArea').hide();
@@ -713,7 +775,7 @@ function updateHistoryView(log) {
 
       var correctDiv = $('<div>');
 
-      correctDiv.html(commaList(entry.answer, "or"));
+      correctDiv.html(commaList(entry.answer, "hoặc"));
       correctDiv.append("<span class='answer-correct'> 〇</span>");
 
       td2.append(correctDiv);
@@ -730,11 +792,11 @@ function updateHistoryView(log) {
   var resultString;
 
   if (correct == total) {
-    resultString = "All correct!";
+    resultString = "Đúng tất cả!";
   } else if (correct == 0) {
-    resultString = "All incorrect!";
+    resultString = "Sai tất cả!";
   } else {
-    resultString = correct + " of " + total + " correct";
+    resultString = "Đúng " + correct + " trên tổng số " + total + " câu";
   }
 
   $('#scoreSectionTitleNarrow').text(resultString);
@@ -825,7 +887,7 @@ function populateVoiceList() {
 
 	  var voiceSelect = document.querySelector("#voice_select");
 
-	  voiceSelect.innerHTML = "<option>Select voice...</option>" +
+	  voiceSelect.innerHTML = "<option>Chọn giọng đọc...</option>" +
         window.speechSynthesis.getVoices().map(function (voice) { return "<option>" + voice.name + "</option>" }).join("");
 
 	  var currentVoice = getCurrentVoice();
@@ -1269,7 +1331,7 @@ $('window').ready(function () {
       words = data;
     })
     .fail(function(jqXHR, textStatus, errorThrown) {
-      console.error('error loading words', textStatus, errorThrown);
+      console.error('không load được từ', textStatus, errorThrown);
     });
   
   promises.push(promise1);
@@ -1279,7 +1341,7 @@ $('window').ready(function () {
       count_dict = data;
     })
     .fail(function(jqXHR, textStatus, errorThrown) {
-      console.error('error loading words', textStatus, errorThrown);
+      console.error('không load được từ', textStatus, errorThrown);
     });
 
   promises.push(promise2);
@@ -1289,7 +1351,7 @@ $('window').ready(function () {
         grp_sample = data;
       })
       .fail(function(jqXHR, textStatus, errorThrown) {
-        console.error('error loading words', textStatus, errorThrown);
+        console.error('không load được từ', textStatus, errorThrown);
       });
     
     promises.push(promise3);
