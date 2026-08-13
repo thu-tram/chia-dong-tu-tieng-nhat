@@ -35,8 +35,6 @@
 
   --tag-fg: #ffffff;
   --tag-bg: #64748b;
-
-  --shake-level: 6px;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -60,6 +58,9 @@
 *::before,
 *::after {
   box-sizing: border-box;
+  animation: none !important;
+  transition: none !important;
+  scroll-behavior: auto !important;
 }
 
 html,
@@ -74,7 +75,6 @@ body {
   color: var(--text);
   line-height: 1.6;
   min-height: 100vh;
-  transition: background 0.3s ease, color 0.3s ease;
 }
 
 a {
@@ -198,7 +198,6 @@ h6 {
   background: var(--surface-2);
   border: 2px solid var(--border);
   border-radius: var(--radius-sm);
-  transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
 .field:focus {
@@ -223,11 +222,10 @@ h6 {
   border: none;
   border-radius: var(--radius-pill);
   cursor: pointer;
-  transition: transform 0.15s ease, box-shadow 0.15s ease, filter 0.15s ease, opacity 0.15s ease;
 }
 
 .btn:active {
-  transform: translateY(2px);
+  filter: brightness(0.94);
 }
 
 .btn-primary {
@@ -353,7 +351,6 @@ h6 {
   padding: 7px 8px;
   border-radius: var(--radius-sm);
   cursor: pointer;
-  transition: background 0.15s ease;
 }
 
 .check:hover {
@@ -432,7 +429,6 @@ h6 {
   height: 100%;
   background: linear-gradient(90deg, var(--brand), var(--accent));
   border-radius: var(--radius-pill);
-  transition: width 0.3s ease;
 }
 
 .quiz-topbar {
@@ -565,23 +561,6 @@ h6 {
   background: var(--danger);
 }
 
-@keyframes shake {
-  0% { transform: translate(0px, 0px); }
-  12.5% { transform: translate(calc(0px - var(--shake-level)), 0px); }
-  25% { transform: translate(var(--shake-level), 0px); }
-  37.5% { transform: translate(calc(0px - var(--shake-level)), 0px); }
-  50% { transform: translate(var(--shake-level), 0px); }
-  62.5% { transform: translate(calc(0px - var(--shake-level)), 0px); }
-  75% { transform: translate(var(--shake-level), 0px); }
-  87.5% { transform: translate(calc(0px - var(--shake-level)), 0px); }
-  100% { transform: translate(0px, 0px); }
-}
-
-.shake {
-  animation: shake 0.36s;
-  animation-iteration-count: 1;
-}
-
 /* ============================================================
    Quiz: proceed / message
    ============================================================ */
@@ -605,12 +584,6 @@ h6 {
 .explanation-card {
   padding: 28px;
   margin-top: 20px;
-  animation: fadeIn 0.25s ease;
-}
-
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(8px); }
-  to { opacity: 1; transform: translateY(0); }
 }
 
 .explanation-card h3 {
@@ -730,7 +703,6 @@ ruby rp {
 /* Reveal-on-hover furigana (used when furigana_always is off) */
 ruby.furiganaHover rt {
   opacity: 0;
-  transition: opacity 0.2s;
 }
 
 ruby.furiganaHover:hover rt {
@@ -823,14 +795,5 @@ body.furiganaAlways ruby.furiganaHover rt {
 
   .option-card {
     padding: 14px 14px;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  *,
-  *::before,
-  *::after {
-    animation-duration: 0.01ms !important;
-    transition-duration: 0.01ms !important;
   }
 }

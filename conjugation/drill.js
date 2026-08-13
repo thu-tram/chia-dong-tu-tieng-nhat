@@ -739,18 +739,11 @@ function processAnswer() {
 }
 
 function shakeInputArea() {
-
   var inputArea = elById('inputArea');
   if (!inputArea) return;
 
   inputArea.classList.remove('shake');
-  void inputArea.offsetWidth;
   inputArea.classList.add('shake');
-
-  inputArea.addEventListener('animationend', function handler() {
-    inputArea.classList.remove('shake');
-    inputArea.removeEventListener('animationend', handler);
-  });
 }
 
 function createMark(text, className) {
