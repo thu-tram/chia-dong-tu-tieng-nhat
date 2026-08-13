@@ -1367,6 +1367,56 @@ function loadData() {
   });
 }
 
+// ===== Theme =====
+var THEME_KEY = 'theme';
+
+function applyTheme(theme, persist) {
+  var isDark = theme === 'dark';
+  var root = document.documentElement;
+  if (root) {
+    if (isDark) {
+      root.setAttribute('data-theme', 'dark');
+    } else {
+      root.removeAttribute('data-theme');
+    }
+  }
+  var toggle = elById('themeToggle');
+  if (toggle) {
+    toggle.setAttribute('aria-pressed', isDark ? 'true' : 'false');
+    toggle.setAttribute('aria-label', isDark ? 'Đổi sang chế độ sáng' : 'Đổi sang chế độ tối');
+  }
+  if (persist) {
+    try {
+      localStorage.setItem(THEME_KEY, theme);
+    } catch (e) {}
+  }
+}
+
+function getInitialTheme() {
+  try {
+    var saved = localStorage.getItem(THEME_KEY);
+    if (saved === 'dark' || saved === 'light') {
+      return saved;
+    }
+  } catch (e) {}
+  if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+    return 'dark';
+  }
+  return 'light';
+}
+
+function initTheme() {
+  applyTheme(getInitialTheme(), false);
+  var toggle = elById('themeToggle');
+  if (toggle) {
+    toggle.addEventListener('click', function () {
+      var root = document.documentElement;
+      var isDark = root ? root.getAttribute('data-theme') === 'dark' : false;
+      applyTheme(isDark ? 'light' : 'dark', true);
+    });
+  }
+}
+
 function init() {
 
   var answerEl = elById('answer');
@@ -1461,6 +1511,7 @@ function init() {
 }
 
 function boot() {
+  initTheme();
   init();
   loadData();
 }

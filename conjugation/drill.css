@@ -3,55 +3,111 @@
    Modern, dependency-free, mobile-first stylesheet.
    ============================================================ */
 
+/* ===== Theme tokens =====
+   Light mode is the default (:root).
+   Dark mode is applied via data-theme="dark" on <html>. */
+
 :root {
-  --font-ui: "Plus Jakarta Sans", "Noto Sans JP", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  --font-jp: "Noto Sans JP", "Plus Jakarta Sans", sans-serif;
+  --font-ui: "Noto Sans JP", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-jp: "Noto Sans JP", sans-serif;
+  color-scheme: light;
 
-  --brand: #6366f1;
-  --brand-dark: #4f46e5;
-  --brand-ink: #312e81;
-  --accent: #22c55e;
-  --success: #22c55e;
-  --danger: #f43f5e;
+  /* Background & Surface */
+  --bg: #ffffff;
+  --surface: #f4f4f5;
+  --surface-2: #e4e4e7;
+  --border: #d4d4d8;
+  --track: #e4e4e7;
+  
+  /* Typography */
+  --text: #18181b;
+  --text-muted: #71717a;
 
-  --bg: #f3f4f9;
-  --surface: #ffffff;
-  --surface-2: #f7f8fc;
-  --border: #e5e7ef;
-  --text: #1e2333;
-  --text-muted: #6b7280;
-  --track: #e5e7ef;
-  --shadow: 0 10px 30px -12px rgba(30, 35, 51, 0.18);
-  --shadow-soft: 0 4px 14px -6px rgba(30, 35, 51, 0.14);
+  /* Brand & Accents (Monochrome) */
+  --brand: #18181b;
+  --accent: #27272a;
+  --link: #18181b;
+  --link-hover: #000000;
+  --emphasis: #18181b;
+  --progress: #18181b;
+  --focus-outline: #18181b;
+  --hover-tint: rgba(0, 0, 0, 0.05);
 
+  /* Component specific */
+  --header-bg: #f4f4f5;
+  --header-text: #18181b;
+
+  --btn-bg: #18181b;
+  --btn-text: #ffffff;
+  --btn-ghost-text: #18181b;
+  --btn-ghost-border: #71717a;
+
+  --success: #4ade80;
+  --success-bg: #15803d;
+  --danger: #f87171;
+  --danger-bg: #b91c1c;
+  
+  /* Question Card */
+  --question-bg: #27272a;
+  --question-text: #f4f4f5;
+  --rt-color: rgba(244, 244, 245, 0.85);
+
+  /* Tags & Badges - Phong cách Dark Pill (Nền tối giản sẫm + Chữ trắng ngà) */
+  --tag-bg: #27272a;         /* Nền xám đen sẫm (Zinc Charcoal) */
+  --tag-fg: #f4f4f5;         /* Chữ trắng ngà sắc nét, nổi bật trên mọi kích thước */
+
+  /* Shadows */
+  --shadow: 0 10px 30px -12px rgba(0, 0, 0, 0.1);
+  --shadow-soft: 0 4px 14px -6px rgba(0, 0, 0, 0.08);
+
+  /* Borders & Radius */
   --radius: 16px;
   --radius-sm: 12px;
   --radius-pill: 999px;
-
-  --question-grad-a: #77428d;
-  --question-grad-b: #462b42;
-  --question-text: #ffffff;
-  --rt-color: rgba(255, 255, 255, 0.82);
-
-  --tag-fg: #ffffff;
-  --tag-bg: #64748b;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --bg: #0f1220;
-    --surface: #1a1f35;
-    --surface-2: #222840;
-    --border: #2c3352;
-    --text: #e6e9f2;
-    --text-muted: #9aa1b8;
-    --track: #2c3352;
-    --shadow: 0 10px 30px -12px rgba(0, 0, 0, 0.6);
-    --shadow-soft: 0 4px 14px -6px rgba(0, 0, 0, 0.5);
-    --question-grad-a: #5b3a75;
-    --question-grad-b: #33203f;
-    --rt-color: rgba(255, 255, 255, 0.8);
-  }
+[data-theme="dark"] {
+  color-scheme: dark;
+
+  --bg: #121212;
+  --surface: #1e1e1e;
+  --surface-2: #262626;
+  --border: #444444;
+  --track: #444444;
+  --text: #e0e0e0;
+  --text-muted: #b0b0b0;
+
+  --brand: #888888;
+  --accent: #8ab4f8;
+  --link: #8ab4f8;
+  --link-hover: #a8c8fa;
+  --emphasis: #8ab4f8;
+  --progress: #888888;
+  --focus-outline: #8ab4f8;
+  --hover-tint: rgba(138, 180, 248, 0.08);
+
+  --header-bg: #1e1e1e;
+  --header-text: #e0e0e0;
+
+  --btn-bg: #e0e0e0;
+  --btn-text: #121212;
+  --btn-ghost-text: #e0e0e0;
+  --btn-ghost-border: #8a8a8a;
+
+  --success: #4ade80;
+  --success-bg: #15803d;
+  --danger: #f87171;
+  --danger-bg: #b91c1c;
+
+  --question-bg: #2a2a2a;
+  --question-text: #e0e0e0;
+  --rt-color: rgba(224, 224, 224, 0.85);
+
+  --tag-fg: #ffffff;
+  --tag-bg: #4b5563;
+
+  --shadow: 0 10px 30px -12px rgba(0, 0, 0, 0.6);
+  --shadow-soft: 0 4px 14px -6px rgba(0, 0, 0, 0.5);
 }
 
 *,
@@ -78,12 +134,14 @@ body {
 }
 
 a {
-  color: var(--brand-dark);
-  text-decoration: none;
+  color: var(--link);
+  text-decoration: underline;
+  text-underline-offset: 3px;
 }
 
 a:hover {
-  text-decoration: underline;
+  color: var(--link);
+  text-decoration-thickness: 2px;
 }
 
 h1,
@@ -139,10 +197,17 @@ h6 {
 }
 
 .panel-header {
-  background: linear-gradient(135deg, var(--brand), var(--brand-ink));
-  color: #ffffff;
+  background: var(--header-bg);
+  color: var(--header-text);
+  border-bottom: 1px solid var(--border);
   padding: 32px 28px;
   text-align: center;
+}
+
+.header-topbar {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 12px;
 }
 
 .panel-header h1 {
@@ -152,12 +217,75 @@ h6 {
 
 .panel-subtitle {
   margin: 0;
-  color: rgba(255, 255, 255, 0.9);
+  color: var(--header-text);
   font-size: 0.95rem;
 }
 
 .panel-body {
   padding: 28px 28px 24px;
+}
+
+/* ============================================================
+   Theme toggle
+   ============================================================ */
+
+.theme-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  background: transparent;
+  color: var(--header-text);
+  border: 2px solid var(--header-text);
+  border-radius: var(--radius-pill);
+  cursor: pointer;
+}
+
+.theme-toggle:hover {
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.theme-toggle:focus-visible {
+  outline: 3px solid var(--focus-outline);
+  outline-offset: 3px;
+}
+
+.theme-toggle svg {
+  width: 22px;
+  height: 22px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.theme-toggle .icon-sun {
+  display: none;
+}
+
+.theme-toggle .icon-moon {
+  display: block;
+}
+
+[data-theme="dark"] .theme-toggle {
+  background: var(--surface);
+  color: var(--text);
+  border-color: var(--border);
+}
+
+[data-theme="dark"] .theme-toggle:hover {
+  background: var(--surface-2);
+}
+
+[data-theme="dark"] .theme-toggle .icon-sun {
+  display: block;
+}
+
+[data-theme="dark"] .theme-toggle .icon-moon {
+  display: none;
 }
 
 /* ============================================================
@@ -201,9 +329,9 @@ h6 {
 }
 
 .field:focus {
-  outline: none;
-  border-color: var(--brand);
-  box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.18);
+  outline: 3px solid var(--focus-outline);
+  outline-offset: 1px;
+  border-color: var(--focus-outline);
 }
 
 /* ============================================================
@@ -229,9 +357,9 @@ h6 {
 }
 
 .btn-primary {
-  background: var(--brand);
-  color: #ffffff;
-  box-shadow: 0 4px 0 var(--brand-dark);
+  background: var(--btn-bg);
+  color: var(--btn-text);
+  box-shadow: var(--shadow-soft);
 }
 
 .btn-primary:hover {
@@ -240,18 +368,18 @@ h6 {
 
 .btn-primary:focus-visible,
 .btn-ghost:focus-visible {
-  outline: 2px solid var(--brand-ink);
+  outline: 3px solid var(--focus-outline);
   outline-offset: 3px;
 }
 
 .btn-ghost {
   background: var(--surface);
-  color: var(--brand-dark);
-  border: 2px solid var(--brand);
+  color: var(--btn-ghost-text);
+  border: 2px solid var(--btn-ghost-border);
 }
 
 .btn-ghost:hover {
-  background: rgba(99, 102, 241, 0.08);
+  background: var(--hover-tint);
 }
 
 .actions {
@@ -275,7 +403,7 @@ h6 {
 
 .count-pill #questionCount {
   font-weight: 800;
-  color: var(--brand-dark);
+  color: var(--link);
 }
 
 .alert-error {
@@ -341,7 +469,7 @@ h6 {
 
 .select-all-btn,
 .deselect-all-btn {
-  color: var(--brand-dark);
+  color: var(--link);
 }
 
 .check {
@@ -354,7 +482,7 @@ h6 {
 }
 
 .check:hover {
-  background: rgba(99, 102, 241, 0.08);
+  background: var(--hover-tint);
 }
 
 .check input[type="checkbox"] {
@@ -362,8 +490,13 @@ h6 {
   width: 18px;
   height: 18px;
   margin-top: 3px;
-  accent-color: var(--brand);
+  accent-color: var(--accent);
   cursor: pointer;
+}
+
+.check input[type="checkbox"]:focus-visible {
+  outline: 3px solid var(--focus-outline);
+  outline-offset: 2px;
 }
 
 .check label {
@@ -412,6 +545,10 @@ h6 {
   margin: 10px 0 0;
 }
 
+.footer-note a {
+  font-weight: 600;
+}
+
 /* ============================================================
    Quiz: progress
    ============================================================ */
@@ -427,7 +564,7 @@ h6 {
 
 .progressBar {
   height: 100%;
-  background: linear-gradient(90deg, var(--brand), var(--accent));
+  background: var(--progress);
   border-radius: var(--radius-pill);
 }
 
@@ -442,17 +579,12 @@ h6 {
   color: var(--danger);
 }
 
-.stop-quiz:hover {
-  text-decoration: none;
-  opacity: 0.8;
-}
-
 /* ============================================================
    Quiz: question
    ============================================================ */
 
 .questionOuter {
-  background: linear-gradient(135deg, var(--question-grad-a), var(--question-grad-b));
+  background: var(--question-bg);
   border-radius: var(--radius);
   box-shadow: var(--shadow-soft);
   padding: 8px;
@@ -515,6 +647,11 @@ h6 {
   overflow: hidden;
 }
 
+.answer-slot:focus-within {
+  outline: 3px solid var(--focus-outline);
+  outline-offset: 2px;
+}
+
 #answer {
   display: block;
   width: 100%;
@@ -529,7 +666,7 @@ h6 {
 
 #answer::placeholder {
   color: var(--text-muted);
-  opacity: 0.7;
+  opacity: 1;
 }
 
 #answer:focus {
@@ -554,11 +691,11 @@ h6 {
 }
 
 .correct {
-  background: var(--success);
+  background: var(--success-bg);
 }
 
 .incorrect {
-  background: var(--danger);
+  background: var(--danger-bg);
 }
 
 /* ============================================================
@@ -588,7 +725,7 @@ h6 {
 
 .explanation-card h3 {
   font-size: 1.15rem;
-  color: var(--brand-dark);
+  color: var(--emphasis);
   margin-top: 1.6em;
   padding-bottom: 6px;
   border-bottom: 2px solid var(--border);
@@ -604,12 +741,12 @@ h6 {
 
 .explanation-card .highlight {
   font-weight: 800;
-  color: var(--brand-dark);
+  color: var(--emphasis);
 }
 
 .emphasis2 {
   font-style: italic;
-  color: var(--brand);
+  color: var(--emphasis);
   font-weight: 600;
 }
 
@@ -625,7 +762,7 @@ h6 {
   padding-top: 0.2em;
   padding-bottom: 0.2em;
   background-color: var(--surface-2);
-  border-left: 3px solid var(--brand);
+  border-left: 3px solid var(--emphasis);
   border-radius: var(--radius-sm);
 }
 
@@ -662,23 +799,23 @@ h6 {
 }
 
 .tag[data-tag="plain"] { background: #64748b; }
-.tag[data-tag="polite"] { background: #3b82f6; }
-.tag[data-tag="negative"] { background: #ef4444; }
-.tag[data-tag="past"] { background: #f59e0b; }
-.tag[data-tag="te-form"] { background: #14b8a6; }
-.tag[data-tag="progressive"] { background: #06b6d4; }
-.tag[data-tag="desire"] { background: #ec4899; }
-.tag[data-tag="volitional"] { background: #a855f7; }
-.tag[data-tag="potential"] { background: #6366f1; }
-.tag[data-tag="conditional"] { background: #f97316; }
-.tag[data-tag="provisional"] { background: #84cc16; }
-.tag[data-tag="imperative"] { background: #e11d48; }
-.tag[data-tag="passive"] { background: #d97706; }
-.tag[data-tag="causative"] { background: #7c3aed; }
-.tag[data-tag="dictionary"] { background: #6b7280; }
-.tag[data-tag="affirmative"] { background: #16a34a; }
-.tag[data-tag="present"] { background: #0ea5e9; }
-.tag[data-tag="active"] { background: #0d9488; }
+.tag[data-tag="polite"] { background: #1d4ed8; }
+.tag[data-tag="negative"] { background: #dc2626; }
+.tag[data-tag="past"] { background: #b45309; }
+.tag[data-tag="te-form"] { background: #0f766e; }
+.tag[data-tag="progressive"] { background: #0e7490; }
+.tag[data-tag="desire"] { background: #be185d; }
+.tag[data-tag="volitional"] { background: #7e22ce; }
+.tag[data-tag="potential"] { background: #4338ca; }
+.tag[data-tag="conditional"] { background: #c2410c; }
+.tag[data-tag="provisional"] { background: #4d7c0f; }
+.tag[data-tag="imperative"] { background: #be123c; }
+.tag[data-tag="passive"] { background: #92400e; }
+.tag[data-tag="causative"] { background: #6d28d9; }
+.tag[data-tag="dictionary"] { background: #4b5563; }
+.tag[data-tag="affirmative"] { background: #15803d; }
+.tag[data-tag="present"] { background: #0369a1; }
+.tag[data-tag="active"] { background: #0f766e; }
 
 /* ============================================================
    Furigana / Ruby

@@ -4,6 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="color-scheme" content="light dark">
   <title>Trang luyện tập chia động từ Tiếng Nhật</title>
   <meta name="description" content="Trang web luyện tập chia động từ và tính từ Tiếng Nhật trực tuyến dành cho người học Việt Nam.">
   <meta property="og:title" content="Trang luyện tập chia động từ Tiếng Nhật" />
@@ -16,6 +17,19 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@100..900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="drill.css" type="text/css" media="screen">
+  <script>
+    (function () {
+      try {
+        var t = localStorage.getItem('theme');
+        if (t !== 'dark' && t !== 'light') {
+          t = (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) ? 'dark' : 'light';
+        }
+        if (t === 'dark') {
+          document.documentElement.setAttribute('data-theme', 'dark');
+        }
+      } catch (e) {}
+    })();
+  </script>
 
   <script defer type="module" src="rules.js"></script>
   <script defer type="module" src="drill.js"></script>
@@ -29,6 +43,24 @@
       <div class="panel">
 
         <header class="panel-header">
+          <div class="header-topbar">
+            <button type="button" id="themeToggle" class="theme-toggle" aria-pressed="false" aria-label="Đổi sang chế độ tối">
+              <svg class="icon-sun" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                <circle cx="12" cy="12" r="5"></circle>
+                <line x1="12" y1="1" x2="12" y2="3"></line>
+                <line x1="12" y1="21" x2="12" y2="23"></line>
+                <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                <line x1="1" y1="12" x2="3" y2="12"></line>
+                <line x1="21" y1="12" x2="23" y2="12"></line>
+                <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+              </svg>
+              <svg class="icon-moon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+              </svg>
+            </button>
+          </div>
           <h1>Trang luyện tập chia động từ Tiếng Nhật</h1>
           <p class="panel-subtitle">Muốn luyện tập gì thì bạn hãy chọn bên dưới rồi bấm Bắt đầu nha.</p>
         </header>
