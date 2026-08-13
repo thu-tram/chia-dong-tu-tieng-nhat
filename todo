@@ -30,8 +30,8 @@ Complete:
 
 Ideas:
 - Add da (desu)
-- dynamically generated sentence based on correct answer form
-- add option to see what they even did
 - [ ] Add support for filtering by meta data ( jlpt, common, industry, etc)
+- [ ] Thêm chức năng chọn tất cả để luyện tập (Thêm "check all (Chọn tất cả) | uncheck all (Bỏ chọn tất cả cho từng phần)")
+- [ ] Thêm nút thoát/dừng làm bài (redirect về trang chủ) khi đang làm bài.
 
 

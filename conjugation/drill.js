@@ -62,6 +62,27 @@ function translateTags(tags) {
   return tags.filter(function (t) { return t !== ""; }).map(translateTag);
 }
 
+function confirmAndStopQuiz() {
+  if (confirm("Bạn có chắc chắn muốn dừng làm bài và quay lại trang chủ không?")) {
+    showSplash();
+  }
+}
+
+function getGroupCheckboxes(group) {
+  switch (group) {
+    case 'conjugations':
+      return $('#plain, #polite, #negative, #past, #te-form, #progressive, #desire, #volitional, #potential, #conditional, #provisional, #imperative, #passive, #causative');
+    case 'verbs':
+      return $('#godan, #ichidan, #suru, #kuru, #iku, #aru, #iru');
+    case 'adjectives':
+      return $('#i-adjective, #na-adjective, #ii');
+    case 'filters':
+      return $('#common, #n5, #n4, #n3, #n2, #n1');
+    default:
+      return $();
+  }
+}
+
 var words;
 var count_dict;
 var grp_sample;
@@ -1382,6 +1403,23 @@ $('window').ready(function () {
     $('#go').click(startQuiz);
     $('#defaults').click(restoreDefaults);
     $('#backToStart').click(showSplash);
+    $('#stopQuiz').click(confirmAndStopQuiz);
+
+    $('.select-all-btn').click(function (e) {
+      e.preventDefault();
+      var group = $(this).data('group');
+      getGroupCheckboxes(group).prop('checked', true);
+      updateOptionSummary();
+      saveOptions();
+    });
+
+    $('.deselect-all-btn').click(function (e) {
+      e.preventDefault();
+      var group = $(this).data('group');
+      getGroupCheckboxes(group).prop('checked', false);
+      updateOptionSummary();
+      saveOptions();
+    });
 
     $('div.options input').click(updateOptionSummary);
     $('select#questionFocus').on('change', updateOptionSummary);
